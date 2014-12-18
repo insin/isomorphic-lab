@@ -42,7 +42,7 @@ app.post('/api/addthing', (req, res, next) => {
   var form = new ThingForm({data: req.body})
   if (form.isValid()) {
     THINGS.push(form.cleanedData)
-    res.status(200).end()
+    res.status(200).type('html').end()
   }
   else {
     res.status(400).json(form.errors().toJSON())
