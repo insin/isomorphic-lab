@@ -13,6 +13,7 @@ var serveStatic = require('serve-static')
 var session = require('express-session')
 
 var assign = require('react/lib/Object.assign')
+var forms = require('newforms')
 var React = require('react')
 var Router = require('react-router')
 
@@ -43,6 +44,12 @@ app.get('/api/things', (req, res, next) => {
 
 app.post('/api/addthing', (req, res, next) => {
   var form = new ThingForm({data: req.body})
+  // Extra validation to test display of server-only validation errors
+  form.cleanName = function() {
+    if (this.cleanedData.name == 'First thing') {
+      throw forms.ValidationError('This is a reserved name - please choose another.')
+    }
+  }
   if (form.isValid()) {
     THINGS.push(form.cleanedData)
     res.status(200).type('html').end()
