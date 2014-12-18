@@ -1,8 +1,10 @@
 'use strict';
 
+var querystring = require('querystring')
+
 var {RenderForm} = require('newforms')
 var React = require('react')
-var {Link, RouteHandler} = require('react-router')
+var {Link, Navigation, RouteHandler} = require('react-router')
 var superagent = require('superagent')
 var promiseagent = require('superagent-promise')
 
@@ -62,6 +64,8 @@ var Things = React.createClass({
 })
 
 var AddThing = React.createClass({
+  mixins: [Navigation],
+
   statics: {
     willTransitionTo(transition, params, query) {
       if (query._method == 'POST') {
@@ -84,11 +88,19 @@ var AddThing = React.createClass({
     }
   },
 
+  _onSubmit(e) {
+    e.preventDefault()
+    var form = this.refs.thingForm.getForm()
+    if (form.validate()) {
+      this.transitionTo(`/addthing?_method=POST&${querystring.stringify(form.data)}`)
+    }
+  },
+
   render() {
     return <div className="AddThing">
       <h2>Add Thing</h2>
-      <form action="/addthing" method="POST">
-        <RenderForm form={ThingForm}/>
+      <form action="/addthing" method="POST" onSubmit={this._onSubmit}>
+        <RenderForm form={ThingForm} ref="thingForm"/>
         <button>Submit</button> or <Link to="things">Cancel</Link>
       </form>
     </div>
