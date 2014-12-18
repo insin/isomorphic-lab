@@ -1,0 +1,40 @@
+{
+  "name": "isomorphic-lab",
+  "version": "1.0.0",
+  "description": "Repo for experimenting on isomorphic apps",
+  "dependencies": {
+    "body-parser": "^1.10.0",
+    "compression": "^1.2.2",
+    "envify": "^3.2.0",
+    "errorhandler": "^1.3.0",
+    "express": "^4.10.6",
+    "jade": "^1.8.2",
+    "morgan": "^1.5.0",
+    "newforms": "^0.10.0-alpha",
+    "promise": "^6.0.1",
+    "react": "^0.12.1",
+    "react-router": "^0.11.6",
+    "run-auto": "^1.0.0",
+    "serve-favicon": "^2.1.7",
+    "serve-static": "^1.7.1",
+    "setimmediate": "^1.0.2",
+    "superagent": "^0.21.0",
+    "superagent-promise": "^0.2.0"
+  },
+  "devDependencies": {
+    "browserify": "^7.0.2",
+    "gulp": "^3.8.10",
+    "gulp-jshint": "^1.9.0",
+    "gulp-nodemon": "^1.0.4",
+    "gulp-plumber": "^0.6.6",
+    "gulp-react": "^2.0.0",
+    "gulp-util": "^3.0.1",
+    "jshint-stylish": "^1.0.0",
+    "vinyl-source-stream": "^1.0.0"
+  },
+  "scripts": {
+    "start": "node lib/server"
+  },
+  "author": "Jonny Buchanan",
+  "license": "MIT"
+}
