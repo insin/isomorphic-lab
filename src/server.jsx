@@ -20,7 +20,7 @@ var fetchData = require('./fetchData')
 var {ThingForm} = require('./forms')
 var routes = require('./routes')
 
-app.set('host', process.env.HOST || '127.0.0.1')
+app.set('host', process.env.HOST || '0.0.0.0')
 app.set('port', process.env.PORT || 3000)
 app.set('views', path.join(__dirname, '../views'))
 app.use(logger('dev'))
@@ -71,7 +71,6 @@ app.use((req, res, next) => {
   }
 
   renderApp(url, (redirect, html, data) => {
-    console.log(arguments)
     if (redirect) {
       res.redirect(303, redirect.to)
     }
@@ -86,6 +85,7 @@ if ('development' == app.get('env')) {
 }
 
 app.listen(app.get('port'), app.get('host'), () => {
-  console.log(pkg.name + ' server listening on http://' + app.get('host') +
-              ':' + app.get('port'))
+  console.log(
+    `${pkg.name} server listening on http://${app.get('host')}:${app.get('port')}`
+  )
 })
