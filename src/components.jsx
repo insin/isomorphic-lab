@@ -14,6 +14,14 @@ var HOST = process.env.HOST
 var PORT = process.env.PORT
 var BASE_URL = `http://${HOST}:${PORT}`
 
+var NotFound = React.createClass({
+  render() {
+    return <div className="NotFound">
+      <h2>Not Found</h2>
+    </div>
+  }
+})
+
 var App = React.createClass({
   _testClick() {
     alert('Events registered!')
@@ -108,7 +116,8 @@ var AddThing = React.createClass({
 })
 
 module.exports = {
-  App
+  AddThing
+, App
+, NotFound
 , Things
-, AddThing
 }
