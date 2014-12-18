@@ -33,7 +33,7 @@
     "vinyl-source-stream": "^1.0.0"
   },
   "scripts": {
-    "start": "node lib/server"
+    "start": "gulp bundle-js && gulp server"
   },
   "author": "Jonny Buchanan",
   "license": "MIT"

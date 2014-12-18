@@ -10,6 +10,7 @@ var source = require('vinyl-source-stream')
 var jsSrcPaths = './src/**/*.js*'
 var jsLibPaths = './lib/**/*.js'
 
+process.env.NODE_ENV = gutil.env.production ? 'production' : 'development'
 process.env.HOST = '127.0.0.1'
 process.env.PORT = '3000'
 
@@ -43,7 +44,7 @@ gulp.task('server', function(cb) {
     script: './lib/server.js'
   , ignore: ['./src/*', './static/*']
   , ext: 'jade js'
-  , delay: 4
+  , delay: 5
   })
   cb()
 })
