@@ -11,12 +11,12 @@ var favicon = require('serve-favicon')
 var logger = require('morgan')
 var serveStatic = require('serve-static')
 
-var auto = require('run-auto')
 var React = require('react')
 var Router = require('react-router')
 
 var app = express()
 var pkg = require('../package.json')
+var fetchData = require('./fetchData')
 var {ThingForm} = require('./forms')
 var routes = require('./routes')
 
@@ -48,24 +48,6 @@ app.post('/api/addthing', (req, res, next) => {
     res.status(400).json(form.errors().toJSON())
   }
 })
-
-function fetchData(routes, params, cb) {
-  var fetchDataRoutes = routes.filter(route => route.handler.fetchData)
-  if (fetchDataRoutes.length === 0) {
-    return cb(null, {})
-  }
-
-  var dataFetchers = {}
-  fetchDataRoutes.forEach(route => {
-    var fetcher = route.handler.fetchData
-    if (fetcher.length == 2) {
-      fetcher = fetcher.bind(null, params)
-    }
-    dataFetchers[route.name] = fetcher
-  })
-
-  auto(dataFetchers, cb)
-}
 
 function renderApp(url, cb) {
   var router = Router.create({
