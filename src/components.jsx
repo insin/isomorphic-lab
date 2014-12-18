@@ -1,5 +1,6 @@
 'use strict';
 
+var {EventEmitter} = require('events')
 var querystring = require('querystring')
 
 var assign = require('react/lib/Object.assign')
@@ -9,6 +10,7 @@ var {Link, Navigation, RouteHandler} = require('react-router')
 var superagent = require('superagent')
 var promiseagent = require('superagent-promise')
 
+var env = require('./env')
 var {ThingForm} = require('./forms')
 
 var HOST = process.env.HOST
@@ -100,6 +102,8 @@ var AddThing = React.createClass({
   mixins: [Navigation],
 
   statics: {
+    eventEmitter: new EventEmitter(),
+
     willTransitionTo(transition, params, query) {
       if (query._method == 'POST') {
         transition.wait(
@@ -109,13 +113,20 @@ var AddThing = React.createClass({
               // TODO Redisplay with server error + original user input
             }
             else if (res.clientError) {
-              // Re-render the form with user input + validation errors
-              var redisplayData = {
-                _data: assign({}, query)
-              , _errors: res.body
+              // Re-render the form with user input + validation errors received
+              // from the API.
+              if (env.CLIENT) {
+                transition.abort()
+                AddThing.eventEmitter.emit('errors', res.body)
               }
-              delete redisplayData._data._method
-              transition.redirect('/addthing', {}, redisplayData)
+              else {
+                var redisplayData = {
+                  _data: assign({}, query)
+                , _errors: res.body
+                }
+                delete redisplayData._data._method
+                transition.redirect('/addthing', {}, redisplayData)
+              }
             }
             else if (res.ok) {
               transition.redirect('/things')
@@ -132,13 +143,21 @@ var AddThing = React.createClass({
       onChange: () => this.forceUpdate()
     , data: _data || null
     })
+    // TODO Add public newforms API for this
     if (_errors) {
-      form.errors()
-      form.addError(null, _errors)
+      form._errors = ErrorObject.fromJSON(_errors)
     }
     return {
       form: form
     }
+  },
+
+  componentDidMount() {
+    AddThing.eventEmitter.on('errors', this._onErrors)
+  },
+
+  componentWillUnmount() {
+    AddThing.eventEmitter.removeListener('errors', this._onErrors)
   },
 
   _onSubmit(e) {
@@ -149,6 +168,15 @@ var AddThing = React.createClass({
     }
   },
 
+  _onErrors(errors) {
+    // TODO Add public newforms API for this
+    var form = this.refs.thingForm.getForm()
+    form._errors = ErrorObject.fromJSON(errors)
+    this.forceUpdate()
+  },
+
+  // TODO Add support for for setting predetermined errors in RenderForm -
+  //      wouldn't need getInitialState() at all then.
   render() {
     return <div className="AddThing">
       <h2>Add Thing</h2>
