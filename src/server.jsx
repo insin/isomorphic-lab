@@ -10,7 +10,9 @@ var express = require('express')
 var favicon = require('serve-favicon')
 var logger = require('morgan')
 var serveStatic = require('serve-static')
+var session = require('express-session')
 
+var assign = require('react/lib/Object.assign')
 var React = require('react')
 var Router = require('react-router')
 
@@ -29,6 +31,7 @@ app.use(bodyParser.json())
 app.use(compression())
 app.use(favicon(path.join(__dirname, '../static/favicon.ico')))
 app.use(serveStatic(path.join(__dirname, '../static')))
+app.use(session({secret: process.env.SECRET, resave: false, saveUninitialized: true}))
 
 var THINGS = [
   {name: 'First thing', price: '42.42', description: 'The very first thing'}
@@ -49,7 +52,7 @@ app.post('/api/addthing', (req, res, next) => {
   }
 })
 
-function renderApp(url, cb) {
+function renderApp(url, redirectData, cb) {
   var router = Router.create({
     routes: routes
   , location: url
@@ -58,6 +61,7 @@ function renderApp(url, cb) {
 
   router.run((Handler, state) => {
     fetchData(state.routes, state.params, (err, data) => {
+      data = assign(redirectData, data)
       var html = React.renderToString(<Handler data={data}/>)
       cb(null, html, JSON.stringify(data))
     })
@@ -65,13 +69,20 @@ function renderApp(url, cb) {
 }
 
 app.use((req, res, next) => {
+  var redirectData = {}
   var url = req.url
+  // Use query params to pass POST data to willTransitionTo
   if (req.method == 'POST') {
     url += `?_method=${req.method}&${querystring.stringify(req.body)}`
   }
+  else if (req.session.redirectData) {
+    redirectData = req.session.redirectData
+    delete req.session.redirectData
+  }
 
-  renderApp(url, (redirect, html, data) => {
+  renderApp(url, redirectData, (redirect, html, data) => {
     if (redirect) {
+      req.session.redirectData = redirect.query
       res.redirect(303, redirect.to)
     }
     else {

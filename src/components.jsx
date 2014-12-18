@@ -2,6 +2,7 @@
 
 var querystring = require('querystring')
 
+var assign = require('react/lib/Object.assign')
 var {RenderForm} = require('newforms')
 var React = require('react')
 var {Link, Navigation, RouteHandler} = require('react-router')
@@ -84,8 +85,13 @@ var AddThing = React.createClass({
               // TODO Redisplay with server error + original user input
             }
             else if (res.clientError) {
-              console.error(`Validation errors: ${res.body}`)
-              // TODO Redisplay with validation errors + original user input
+              // Re-render the form with user input + validation errors
+              var redisplayData = {
+                _data: assign({}, query)
+              , _errors: res.body
+              }
+              delete redisplayData._data._method
+              transition.redirect('/addthing', {}, redisplayData)
             }
             else if (res.ok) {
               transition.redirect('/things')
@@ -93,6 +99,21 @@ var AddThing = React.createClass({
           })
         )
       }
+    }
+  },
+
+  getInitialState() {
+    var {_data, _errors} = this.props.data
+    var form = new ThingForm({
+      onChange: () => this.forceUpdate()
+    , data: _data || null
+    })
+    if (_errors) {
+      form.errors()
+      form.addError(null, _errors)
+    }
+    return {
+      form: form
     }
   },
 
@@ -108,7 +129,7 @@ var AddThing = React.createClass({
     return <div className="AddThing">
       <h2>Add Thing</h2>
       <form action="/addthing" method="POST" onSubmit={this._onSubmit}>
-        <RenderForm form={ThingForm} ref="thingForm"/>
+        <RenderForm form={this.state.form} ref="thingForm"/>
         <button>Submit</button> or <Link to="things">Cancel</Link>
       </form>
     </div>
