@@ -21,6 +21,7 @@ var app = express()
 var pkg = require('../package.json')
 var fetchData = require('./fetchData')
 var {ThingForm} = require('./forms')
+var Render = require('./Render')
 var routes = require('./routes')
 
 app.set('host', process.env.HOST || '0.0.0.0')
@@ -59,43 +60,78 @@ app.post('/api/addthing', (req, res, next) => {
   }
 })
 
-function renderApp(url, redirectData, cb) {
+function renderApp(location, extraData, cb) {
   var router = Router.create({
-    routes: routes
-  , location: url
-  , onAbort: cb
+    location,
+    routes,
+
+    onAbort(reason) {
+      if (reason instanceof Error) {
+        cb(reason)
+      }
+      else if (reason instanceof Router.Redirect) {
+        cb(null, {redirect: reason})
+      }
+      else if (reason instanceof Render) {
+        cb(null, {render: reason})
+      }
+      else {
+        cb(null, reason)
+      }
+    },
+
+    onError(err) {
+      cb(err)
+    }
   })
 
   router.run((Handler, state) => {
+    if (state.routes[0].name == 'notfound') {
+      var html = React.renderToStaticMarkup(<Handler/>)
+      return cb(null, {notFound: true}, html)
+    }
     fetchData(state.routes, state.params, (err, data) => {
-      data = assign(redirectData, data)
+      if (extraData) {
+        data = assign(extraData, data)
+      }
       var html = React.renderToString(<Handler data={data}/>)
-      cb(null, html, JSON.stringify(data))
+      cb(null, null, html, JSON.stringify(data))
     })
   })
 }
 
+function renderAppHandler(res, next, err, special, html, data) {
+  if (err) {
+    return next(err)
+  }
+
+  if (!special) {
+    return res.render('react.jade', {html: html, data: data})
+  }
+
+  if (special.notFound) {
+    res.status(404).send(html)
+  }
+  else if (special.redirect) {
+    res.redirect(303, special.redirect.to)
+  }
+  else if (special.render) {
+    var {url, props} = special.render
+    renderApp(url, props, renderAppHandler.bind(null, res, next))
+  }
+  else {
+    console.error('Unexpected special response case: ', special)
+    next(new Error('Unexpected special response case'))
+  }
+}
+
 app.use((req, res, next) => {
-  var redirectData = {}
   var url = req.url
   // Use query params to pass POST data to willTransitionTo
   if (req.method == 'POST') {
     url += `?_method=${req.method}&${querystring.stringify(req.body)}`
   }
-  else if (req.session.redirectData) {
-    redirectData = req.session.redirectData
-    delete req.session.redirectData
-  }
-
-  renderApp(url, redirectData, (redirect, html, data) => {
-    if (redirect) {
-      req.session.redirectData = redirect.query
-      res.redirect(303, redirect.to)
-    }
-    else {
-      res.render('react.jade', {html: html, data: data})
-    }
-  })
+  renderApp(url, null, renderAppHandler.bind(null, res, next))
 })
 
 if ('development' == app.get('env')) {

@@ -12,6 +12,7 @@ var promiseagent = require('superagent-promise')
 
 var env = require('./env')
 var {ThingForm} = require('./forms')
+var Render = require('./Render')
 
 var HOST = process.env.HOST
 var PORT = process.env.PORT
@@ -125,7 +126,7 @@ var AddThing = React.createClass({
                 , _errors: res.body
                 }
                 delete redisplayData._data._method
-                transition.redirect('/addthing', {}, redisplayData)
+                transition.abort(new Render('/addthing', redisplayData))
               }
             }
             else if (res.ok) {
