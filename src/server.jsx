@@ -106,11 +106,11 @@ function renderAppHandler(res, next, err, special, html, data) {
   }
 
   if (!special) {
-    return res.render('react.jade', {html: html, data: data})
+    return res.render('react.jade', {html, data})
   }
 
   if (special.notFound) {
-    res.status(404).send(html)
+    res.status(404).render('base.jade', {title: 'Not Found', html})
   }
   else if (special.redirect) {
     res.redirect(303, special.redirect.to)

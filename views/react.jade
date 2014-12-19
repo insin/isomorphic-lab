@@ -1,9 +1,6 @@
-doctype html
-head
-  meta(charset='UTF-8')
-  title Isomorphic Lab
-  link(rel='stylesheet', href='/css/style.css')
-body
+extends base
+
+block content
   div#app
     != html
   script window.__DATA__ = !{data}
