@@ -53,10 +53,10 @@ app.post('/api/addthing', (req, res, next) => {
   }
   if (form.isValid()) {
     THINGS.push(form.cleanedData)
-    res.status(200).type('html').end()
+    res.sendStatus(200)
   }
   else {
-    res.status(400).json(form.errors().toJSON())
+    res.status(400).json(form.errors())
   }
 })
 
