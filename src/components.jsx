@@ -26,13 +26,19 @@ var NotFound = React.createClass({
 })
 
 var App = React.createClass({
-  _testClick() {
-    alert('Events registered!')
+  getInitialState() {
+    return {
+      server: true
+    }
+  },
+
+  componentDidMount() {
+    this.setState({server: false})
   },
 
   render() {
     return <div className="App" >
-      <h1><Link to="home">App</Link> <small onClick={this._testClick}>click me to check events</small></h1>
+      <h1><Link to="home">App</Link> <small>({this.state.server ? 'server' : 'client'} version)</small></h1>
       <Link to="things">Things</Link>
       <RouteHandler {...this.props}/>
     </div>
