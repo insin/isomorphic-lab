@@ -34,7 +34,7 @@ var App = React.createClass({
   render() {
     return <div className="App" >
       <h1><Link to="home">App</Link> <small onClick={this._testClick}>click me to check events</small></h1>
-      <Link to="things">List Things</Link>
+      <Link to="things">Things</Link>
       <RouteHandler data={this.props.data}/>
     </div>
   }

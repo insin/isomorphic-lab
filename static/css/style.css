@@ -1,3 +1,9 @@
 body {
   font-family: 'Open Sans', sans-serif;
 }
+
+a.active {
+  color: #000;
+  font-weight: bold;
+  text-decoration: none;
+}
