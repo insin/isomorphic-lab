@@ -4,7 +4,7 @@ var {EventEmitter} = require('events')
 var querystring = require('querystring')
 
 var assign = require('react/lib/Object.assign')
-var {ErrorList, ErrorObject, RenderForm, ValidationError} = require('newforms')
+var {ErrorObject, RenderForm} = require('newforms')
 var React = require('react')
 var {Link, Navigation, RouteHandler} = require('react-router')
 var superagent = require('superagent')
@@ -17,30 +17,6 @@ var Render = require('./Render')
 var HOST = process.env.HOST
 var PORT = process.env.PORT
 var BASE_URL = `http://${HOST}:${PORT}`
-
-// TODO Add these monkeypatches to newforms proper
-
-ErrorObject.fromJSON = function(obj) {
-  var result = new ErrorObject()
-  result.fromJSON(obj)
-  return result
-}
-
-ErrorObject.prototype.fromJSON = function(obj) {
-  Object.keys(obj).forEach(fieldName => {
-    this.errors[fieldName] = ErrorList.fromJSON(obj[fieldName])
-  })
-}
-
-ErrorList.fromJSON = function(list) {
-  var result = new ErrorList()
-  result.fromJSON(list)
-  return result
-}
-
-ErrorList.prototype.fromJSON = function(list) {
-  this.data = list.map(err => ValidationError(err.message, {code: err.code}))
-}
 
 var NotFound = React.createClass({
   render() {
