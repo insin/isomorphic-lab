@@ -18,13 +18,13 @@ var React = require('react')
 var Router = require('react-router')
 var Redirect = require('react-router/modules/utils/Redirect')
 
-var app = express()
 var pkg = require('../package.json')
-var fetchData = require('./fetchData')
 var {ThingForm} = require('./forms')
-var Render = require('./Render')
 var routes = require('./routes')
+var fetchData = require('./utils/fetchData')
+var Render = require('./utils/Render')
 
+var app = express()
 app.set('host', process.env.HOST || '0.0.0.0')
 app.set('port', process.env.PORT || 3000)
 app.set('views', path.join(__dirname, '../views'))
@@ -34,7 +34,7 @@ app.use(bodyParser.json())
 app.use(compression())
 app.use(favicon(path.join(__dirname, '../static/favicon.ico')))
 app.use(serveStatic(path.join(__dirname, '../static')))
-app.use(session({secret: process.env.SECRET, resave: false, saveUninitialized: true}))
+app.use(session({secret: process.env.SECRET || 'secret', resave: false, saveUninitialized: true}))
 
 var THINGS = [
   {name: 'First thing', price: '42.42', description: 'The very first thing'}
@@ -121,8 +121,8 @@ function renderAppHandler(res, next, err, special, html, props) {
     renderApp(url, extraProps, renderAppHandler.bind(null, res, next))
   }
   else {
-    console.error('Unexpected special response case: ', special)
-    next(new Error('Unexpected special response case'))
+    console.error('Unexpected special response case: ', special.constructor, special)
+    next(new Error('Unexpected special response case, see server logs.'))
   }
 }
 

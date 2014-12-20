@@ -5,7 +5,7 @@ require('setimmediate')
 var React = require('react')
 var Router = require('react-router')
 
-var fetchData = require('./fetchData')
+var fetchData = require('./utils/fetchData')
 var routes = require('./routes')
 
 var appDiv = document.getElementById('app')

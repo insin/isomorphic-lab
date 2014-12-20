@@ -8,4 +8,6 @@ var ThingForm = forms.Form.extend({
   description: forms.CharField({widget: forms.Textarea})
 })
 
-module.exports = {ThingForm}
+module.exports = {
+  ThingForm
+}

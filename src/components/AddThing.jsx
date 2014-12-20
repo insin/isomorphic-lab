@@ -4,81 +4,14 @@ var querystring = require('querystring')
 
 var {ErrorObject, RenderForm} = require('newforms')
 var React = require('react')
-var {Link, Navigation, RouteHandler} = require('react-router')
-var superagent = require('superagent')
-var promiseagent = require('superagent-promise')
+var {Link, Navigation} = require('react-router')
+var promiseAgent = require('superagent-promise')
 
-var env = require('./env')
-var events = require('./events')
-var {ThingForm} = require('./forms')
-var Render = require('./Render')
-
-var HOST = process.env.HOST
-var PORT = process.env.PORT
-var BASE_URL = `http://${HOST}:${PORT}`
-
-var NotFound = React.createClass({
-  render() {
-    return <div className="NotFound">
-      <h2>Not Found</h2>
-    </div>
-  }
-})
-
-var App = React.createClass({
-  getInitialState() {
-    return {
-      server: true
-    }
-  },
-
-  componentDidMount() {
-    this.setState({server: false})
-  },
-
-  render() {
-    return <div className="App" >
-      <h1><Link to="home">App</Link> <small>({this.state.server ? 'server' : 'client'} version)</small></h1>
-      <Link to="things">Things</Link>
-      <RouteHandler {...this.props}/>
-    </div>
-  }
-})
-
-var Things = React.createClass({
-  statics: {
-    fetchData(cb) {
-      superagent.get(`${BASE_URL}/api/things`).accept('json').end(function(err, res) {
-        cb(err, res && res.body)
-      })
-    }
-  },
-
-  getDefaultProps() {
-    return {
-      data: {}
-    }
-  },
-
-  render() {
-    var {things} = this.props.data
-    return <div className="Things">
-      <h2>Things</h2>
-      {things && things.map(thing => <div className="Thing__thing">
-        <dl>
-          <dt>Name:</dt>
-          <dd>{thing.name}</dd>
-          <dt>Price:</dt>
-          <dd>{thing.price}</dd>
-          <dt>Description:</dt>
-          <dd>{thing.description}</dd>
-        </dl>
-      </div>)}
-      <hr/>
-      <Link to="/addthing">Add Thing</Link>
-    </div>
-  }
-})
+var {BASE_URL} = require('../constants')
+var {ThingForm} = require('../forms')
+var env = require('../utils/env')
+var events = require('../utils/events')
+var Render = require('../utils/Render')
 
 var AddThing = React.createClass({
   mixins: [Navigation],
@@ -90,7 +23,7 @@ var AddThing = React.createClass({
       if (query._method != 'POST') { return }
       delete query._method
 
-      transition.wait(promiseagent.post(`${BASE_URL}/api/addthing`).send(query).end().then(res => {
+      transition.wait(promiseAgent.post(`${BASE_URL}/api/addthing`).send(query).end().then(res => {
         if (res.serverError) {
           throw new Error(`Server error: ${res.body}`)
         }
@@ -163,9 +96,4 @@ var AddThing = React.createClass({
   }
 })
 
-module.exports = {
-  AddThing
-, App
-, NotFound
-, Things
-}
+module.exports = AddThing

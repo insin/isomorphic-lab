@@ -1,0 +1,42 @@
+'use strict';
+
+var React = require('react')
+var {Link} = require('react-router')
+var superagent = require('superagent')
+
+var {BASE_URL} = require('../constants')
+
+var Things = React.createClass({
+  statics: {
+    fetchData(cb) {
+      superagent.get(`${BASE_URL}/api/things`).accept('json').end(function(err, res) {
+        cb(err, res && res.body)
+      })
+    }
+  },
+
+  getDefaultProps() {
+    return {data: {}}
+  },
+
+  render() {
+    var {things} = this.props.data
+    return <div className="Things">
+      <h2>Things</h2>
+      {things && things.map(thing => <div className="Thing__thing">
+        <dl>
+          <dt>Name:</dt>
+          <dd>{thing.name}</dd>
+          <dt>Price:</dt>
+          <dd>{thing.price}</dd>
+          <dt>Description:</dt>
+          <dd>{thing.description}</dd>
+        </dl>
+      </div>)}
+      <hr/>
+      <Link to="/addthing">Add Thing</Link>
+    </div>
+  }
+})
+
+module.exports = Things

@@ -3,12 +3,10 @@
 var React = require('react')
 var {NotFoundRoute, Route} = require('react-router')
 
-var {AddThing, App, NotFound, Things} = require('./components')
-
 module.exports = [
-  <Route name="home" path="/" handler={App}>
-    <Route name="things" handler={Things}/>
-    <Route name="addthing" handler={AddThing}/>
+  <Route name="home" path="/" handler={require('./components/App')}>
+    <Route name="things" handler={require('./components/Things')}/>
+    <Route name="addthing" handler={require('./components/AddThing')}/>
   </Route>,
-  <NotFoundRoute name="notfound" handler={NotFound}/>
+  <NotFoundRoute name="notfound" handler={require('./components/NotFound')}/>
 ]

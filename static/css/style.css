@@ -2,7 +2,7 @@ body {
   font-family: 'Open Sans', sans-serif;
 }
 
-a.active {
+nav a.active {
   color: #000;
   font-weight: bold;
   text-decoration: none;
