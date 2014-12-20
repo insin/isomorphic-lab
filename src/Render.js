@@ -4,9 +4,9 @@
  * Render the app with a URL, passing the handler the given props in addition to
  * any data fetched for it.
  */
-function Render(url, props) {
+function Render(url, extraProps) {
   this.url = url
-  this.props = props
+  this.extraProps = extraProps
 }
 
 module.exports = Render

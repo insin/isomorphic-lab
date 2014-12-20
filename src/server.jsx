@@ -60,7 +60,7 @@ app.post('/api/addthing', (req, res, next) => {
   }
 })
 
-function renderApp(location, extraData, cb) {
+function renderApp(location, extraProps, cb) {
   var router = Router.create({
     location,
     routes,
@@ -90,23 +90,23 @@ function renderApp(location, extraData, cb) {
       var html = React.renderToStaticMarkup(<Handler/>)
       return cb(null, {notFound: true}, html)
     }
-    fetchData(state.routes, state.params, (err, data) => {
-      if (extraData) {
-        data = assign(extraData, data)
+    fetchData(state.routes, state.params, (err, props) => {
+      if (extraProps) {
+        assign(props, extraProps)
       }
-      var html = React.renderToString(<Handler data={data}/>)
-      cb(null, null, html, JSON.stringify(data))
+      var html = React.renderToString(<Handler {...props}/>)
+      cb(null, null, html, JSON.stringify(props))
     })
   })
 }
 
-function renderAppHandler(res, next, err, special, html, data) {
+function renderAppHandler(res, next, err, special, html, props) {
   if (err) {
     return next(err)
   }
 
   if (!special) {
-    return res.render('react.jade', {html, data})
+    return res.render('react.jade', {html, props})
   }
 
   if (special.notFound) {
@@ -116,8 +116,8 @@ function renderAppHandler(res, next, err, special, html, data) {
     res.redirect(303, special.redirect.to)
   }
   else if (special.render) {
-    var {url, props} = special.render
-    renderApp(url, props, renderAppHandler.bind(null, res, next))
+    var {url, extraProps} = special.render
+    renderApp(url, extraProps, renderAppHandler.bind(null, res, next))
   }
   else {
     console.error('Unexpected special response case: ', special)

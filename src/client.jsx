@@ -11,7 +11,7 @@ var routes = require('./routes')
 var appDiv = document.getElementById('app')
 
 Router.run(routes, Router.HistoryLocation, (Handler, state) => {
-  fetchData(state.routes, state.params, function(err, data) {
-    React.render(<Handler data={data}/>, appDiv)
+  fetchData(state.routes, state.params, function(err, props) {
+    React.render(<Handler {...props}/>, appDiv)
   })
 })

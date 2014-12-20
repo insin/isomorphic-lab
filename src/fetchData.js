@@ -5,10 +5,10 @@ var runAuto = require('run-auto')
 var env = require('./env')
 
 function fetchData(routes, params, cb) {
-  if (env.CLIENT && typeof window.__DATA__ != 'undefined') {
-    var data = window.__DATA__
-    delete window.__DATA__
-    return cb(null, data)
+  if (env.CLIENT && typeof window.__PROPS__ != 'undefined') {
+    var props = window.__PROPS__
+    delete window.__PROPS__
+    return cb(null, props)
   }
 
   var fetchDataRoutes = routes.filter(route => route.handler.fetchData)
@@ -25,7 +25,9 @@ function fetchData(routes, params, cb) {
     dataFetchers[route.name] = fetcher
   })
 
-  runAuto(dataFetchers, cb)
+  runAuto(dataFetchers, function(err, data) {
+    cb(err, {data})
+  })
 }
 
 module.exports = fetchData
