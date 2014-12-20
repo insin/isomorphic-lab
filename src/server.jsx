@@ -16,6 +16,7 @@ var assign = require('react/lib/Object.assign')
 var forms = require('newforms')
 var React = require('react')
 var Router = require('react-router')
+var Redirect = require('react-router/modules/utils/Redirect')
 
 var app = express()
 var pkg = require('../package.json')
@@ -69,7 +70,7 @@ function renderApp(location, extraProps, cb) {
       if (reason instanceof Error) {
         cb(reason)
       }
-      else if (reason instanceof Router.Redirect) {
+      else if (reason instanceof Redirect) {
         cb(null, {redirect: reason})
       }
       else if (reason instanceof Render) {
