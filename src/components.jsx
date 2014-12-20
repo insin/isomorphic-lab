@@ -140,7 +140,7 @@ var AddThing = React.createClass({
   _onSubmit(e) {
     e.preventDefault()
     var form = this.refs.thingForm.getForm()
-    if (form.validate()) {
+    if (form.validate(this.refs.form)) {
       this.transitionTo(`/addthing?_method=POST&${querystring.stringify(form.data)}`)
     }
   },
@@ -157,7 +157,7 @@ var AddThing = React.createClass({
   render() {
     return <div className="AddThing">
       <h2>Add Thing</h2>
-      <form action="/addthing" method="POST" onSubmit={this._onSubmit}>
+      <form action="/addthing" method="POST" onSubmit={this._onSubmit} ref="form">
         <RenderForm form={this.state.form} ref="thingForm"/>
         <button>Submit</button> or <Link to="things">Cancel</Link>
       </form>
