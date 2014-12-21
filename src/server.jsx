@@ -13,13 +13,12 @@ var serveStatic = require('serve-static')
 var session = require('express-session')
 
 var assign = require('react/lib/Object.assign')
-var forms = require('newforms')
 var React = require('react')
 var Router = require('react-router')
 var Redirect = require('react-router/modules/utils/Redirect')
 
 var pkg = require('../package.json')
-var {ThingForm} = require('./forms')
+var api = require('./api')
 var routes = require('./routes')
 var fetchData = require('./utils/fetchData')
 var Render = require('./utils/Render')
@@ -36,30 +35,7 @@ app.use(favicon(path.join(__dirname, '../static/favicon.ico')))
 app.use(serveStatic(path.join(__dirname, '../static')))
 app.use(session({secret: process.env.SECRET || 'secret', resave: false, saveUninitialized: true}))
 
-var THINGS = [
-  {name: 'First thing', price: '42.42', description: 'The very first thing'}
-]
-
-app.get('/api/things', (req, res, next) => {
-  res.json(THINGS)
-})
-
-app.post('/api/addthing', (req, res, next) => {
-  var form = new ThingForm({data: req.body})
-  // Extra validation to test display of server-only validation errors
-  form.cleanName = function() {
-    if (this.cleanedData.name == 'First thing') {
-      throw forms.ValidationError('This is a reserved name - please choose another.')
-    }
-  }
-  if (form.isValid()) {
-    THINGS.push(form.cleanedData)
-    res.sendStatus(200)
-  }
-  else {
-    res.status(400).json(form.errors())
-  }
-})
+app.use('/api', api)
 
 function renderApp(location, extraProps, cb) {
   var router = Router.create({
