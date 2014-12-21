@@ -1,7 +1,6 @@
 'use strict';
 
-var querystring = require('querystring')
-
+var assign = require('react/lib/Object.assign')
 var {ErrorObject, RenderForm} = require('newforms')
 var React = require('react')
 var {Link, Navigation} = require('react-router')
@@ -74,7 +73,7 @@ var AddThing = React.createClass({
     e.preventDefault()
     var form = this.refs.thingForm.getForm()
     if (form.validate(this.refs.form)) {
-      this.transitionTo(`/addthing?_method=POST&${querystring.stringify(form.data)}`)
+      this.transitionTo('/addthing', {}, assign({_method: 'POST'}, form.data))
     }
   },
 
