@@ -23,7 +23,8 @@ var Things = React.createClass({
     var {things} = this.props.data
     return <div className="Things">
       <h2>Things</h2>
-      {things && things.map(thing => <div className="Thing__thing">
+      {things && things.map((thing, index) => <div className="Things__thing">
+        <h3>Thing #{index + 1}</h3>
         <dl>
           <dt>Name:</dt>
           <dd>{thing.name}</dd>

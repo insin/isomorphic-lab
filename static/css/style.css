@@ -7,3 +7,45 @@ nav a.active {
   font-weight: bold;
   text-decoration: none;
 }
+
+dt {
+  font-weight: bold;
+}
+
+.Things__thing {
+  border-radius: .75em;
+  border: 1px solid #000;
+  display: inline-block;
+  margin: 0 .75em .75em 0;
+  overflow: hidden;
+}
+.Things__thing h3 {
+  background-color: #222;
+  border-bottom: 1px solid #000;
+  color: #00d8ff;
+  margin: 0;
+  padding: .5em 0;
+  text-align: center;
+}
+.Things__thing dl {
+  margin: 1em;
+}
+
+form > div > div {
+  margin-bottom: 1em;
+}
+form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+.errorlist {
+  color: #f00;
+  list-style: none;
+  margin: 6px 0 0 0;
+  padding: 0;
+}
+.errorlist li {
+  margin-left: 0;
+  padding-left: 0;
+}
