@@ -1,8 +1,9 @@
 'use strict';
 
 var React = require('react')
-
 var {Link, RouteHandler} = require('react-router')
+
+var Title = require('./DocumentTitle')
 
 var App = React.createClass({
   getInitialState() {
@@ -16,7 +17,8 @@ var App = React.createClass({
   },
 
   render() {
-    return <div className="App" >
+    return <div className="App">
+      <Title/>
       <h1><Link to="home">App</Link> <small>({this.state.server ? 'server' : 'client'} version)</small></h1>
       <nav>
         <Link to="things">Things</Link>

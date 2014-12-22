@@ -4,6 +4,7 @@ var React = require('react')
 var {Link} = require('react-router')
 var superagent = require('superagent')
 
+var Title = require('./DocumentTitle')
 var {BASE_URL} = require('../constants')
 
 var Things = React.createClass({
@@ -22,6 +23,7 @@ var Things = React.createClass({
   render() {
     var {things} = this.props.data
     return <div className="Things">
+      <Title title="Things"/>
       <h2>Things</h2>
       {things && things.map((thing, index) => <div className="Things__thing">
         <h3>Thing #{index + 1}</h3>

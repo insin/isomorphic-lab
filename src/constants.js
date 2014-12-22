@@ -8,4 +8,5 @@ module.exports = {
   BASE_URL
 , HOST
 , PORT
+, TITLE: 'Isomorphic Lab'
 }

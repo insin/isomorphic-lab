@@ -6,6 +6,7 @@ var React = require('react')
 var {Link, Navigation} = require('react-router')
 var promiseAgent = require('superagent-promise')
 
+var Title = require('./DocumentTitle')
 var {BASE_URL} = require('../constants')
 var {ThingForm} = require('../forms')
 var env = require('../utils/env')
@@ -83,6 +84,7 @@ var AddThing = React.createClass({
 
   render() {
     return <div className="AddThing">
+      <Title title="Add Thing"/>
       <h2>Add Thing</h2>
       <form action="/addthing" method="POST" onSubmit={this._onSubmit} ref="form">
         <RenderForm form={ThingForm} ref="thingForm"

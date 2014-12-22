@@ -3,6 +3,7 @@
 var querystring = require('querystring')
 
 var assign = require('react/lib/Object.assign')
+var DocumentTitle = require('react-document-title')
 var React = require('react')
 var Router = require('react-router')
 var Redirect = require('react-router/modules/utils/Redirect')
@@ -43,29 +44,29 @@ module.exports = function(routes) {
     router.run((Handler, state) => {
       if (state.routes[0].name == 'notfound') {
         var html = React.renderToStaticMarkup(<Handler/>)
-        return cb(null, {notFound: true}, html)
+        return cb(null, {notFound: true}, html, null, DocumentTitle.rewind())
       }
       fetchData(state.routes, state.params, (err, props) => {
         if (extraProps) {
           assign(props, extraProps)
         }
         var html = React.renderToString(<Handler {...props}/>)
-        cb(null, null, html, JSON.stringify(props))
+        cb(null, null, html, JSON.stringify(props), DocumentTitle.rewind())
       })
     })
   }
 
-  function renderAppHandler(res, next, err, special, html, props) {
+  function renderAppHandler(res, next, err, special, html, props, title) {
     if (err) {
       return next(err)
     }
 
     if (!special) {
-      return res.render('react', {html, props})
+      return res.render('react', {title, html, props})
     }
 
     if (special.notFound) {
-      res.status(404).render('react-404', {title: 'Not Found', html})
+      res.status(404).render('react-404', {title, html})
     }
     else if (special.redirect) {
       res.redirect(303, special.redirect.to)
