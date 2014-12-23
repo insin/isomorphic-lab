@@ -24,17 +24,15 @@ var Things = React.createClass({
     var {things} = this.props.data
     return <div className="Things">
       <Title title="Things"/>
-      <h2>Things</h2>
+      <h2>Things <small>(10 most recent)</small></h2>
       {things && things.map((thing, index) => <div className="Things__thing">
-        <h3>Thing #{index + 1}</h3>
-        <dl>
-          <dt>Name:</dt>
-          <dd>{thing.name}</dd>
-          <dt>Price:</dt>
-          <dd>{thing.price}</dd>
-          <dt>Description:</dt>
-          <dd>{thing.description}</dd>
-        </dl>
+        <h3>{thing.name}</h3>
+        <div className="Things__thing-price">
+          <strong>&curren;{thing.price.toFixed(2)}</strong>
+        </div>
+        <div className="Things__thing-description">
+          {thing.description}
+        </div>
       </div>)}
       <hr/>
       <Link to="/addthing">Add Thing</Link>

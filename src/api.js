@@ -6,7 +6,7 @@ var {ValidationError} = require('newforms')
 var {ThingForm} = require('./forms')
 
 var THINGS = [
-  {name: 'First thing', price: '42.42', description: 'The very first thing'}
+  {name: 'First thing', price: 42.42, description: 'The very first thing.'}
 ]
 
 var router = express.Router()
@@ -19,12 +19,17 @@ router.post('/addthing', (req, res, next) => {
   var form = new ThingForm({data: req.body})
   // Extra validation to test display of server-only validation errors
   form.cleanName = function() {
-    if (this.cleanedData.name == 'First thing') {
-      throw new ValidationError('This is a reserved name - please choose another.')
+    for (var i = 0, l = THINGS.length; i < l ; i++) {
+      if (THINGS[i].name == this.cleanedData.name) {
+        throw new ValidationError('This name is already taken - please choose another.')
+      }
     }
   }
   if (form.isValid()) {
-    THINGS.push(form.cleanedData)
+    var thing = form.cleanedData
+    thing.price = Number(thing.price)
+    THINGS.unshift(thing)
+    THINGS.splice(10, THINGS.length)
     res.sendStatus(200)
   }
   else {
