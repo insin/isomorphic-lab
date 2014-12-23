@@ -6,7 +6,7 @@ var React = require('react')
 var {Link, Navigation} = require('react-router')
 var promiseAgent = require('superagent-promise')
 
-var {BASE_URL} = require('../constants')
+var {API_URL} quire('../constants')
 var {ThingForm} = require('../forms')
 var env = require('../utils/env')
 var events = require('../utils/events')
@@ -24,7 +24,7 @@ var AddThing = React.createClass({
       if (query._method != 'POST') { return }
       delete query._method
 
-      transition.wait(promiseAgent.post(`${BASE_URL}/api/addthing`).send(query).end().then(res => {
+      transition.wait(promiseAgent.post(`${API_URL}/addthing`).send(query).end().then(res => {
         if (res.serverError) {
           throw new Error(`Server error: ${res.body}`)
         }

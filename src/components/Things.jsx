@@ -4,14 +4,14 @@ var React = require('react')
 var {Link} = require('react-router')
 var superagent = require('superagent')
 
-var {BASE_URL} = require('../constants')
+var {API_URL} = require('../constants')
 
 var Things = React.createClass({
   statics: {
     title: 'Things',
 
     fetchData(cb) {
-      superagent.get(`${BASE_URL}/api/things`).accept('json').end(function(err, res) {
+      superagent.get(`${API_URL}/things`).accept('json').end(function(err, res) {
         cb(err, res && res.body)
       })
     }
