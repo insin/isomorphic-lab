@@ -15,6 +15,18 @@ router.get('/things', (req, res, next) => {
   res.json(THINGS)
 })
 
+router.get('/thing/:num', (req, res, next) => {
+  var {num} = req.params
+  if (!/[1-9]|10/.test(num)) {
+    return res.status(404).json({error: 'Invalid thing number.'})
+  }
+  var index = Number(num) - 1
+  if (!THINGS[index]) {
+    return res.status(404).json({error: `Thing number ${num} not found.`})
+  }
+  res.json(THINGS[index])
+})
+
 router.post('/addthing', (req, res, next) => {
   var form = new ThingForm({data: req.body})
   // Extra validation to test display of server-only validation errors

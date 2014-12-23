@@ -1,5 +1,6 @@
 body { font-family: 'Open Sans', sans-serif; }
 
+nav { margin-bottom: 1em; }
 nav a.active {
   color: #000;
   font-weight: bold;
@@ -22,6 +23,7 @@ nav a.active {
   padding: .5em .75em;
   text-align: center;
 }
+.Thing__name a { color: inherit; }
 .Thing__price {
   border-bottom: 1px solid #000;
   padding: .5em .75em;
