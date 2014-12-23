@@ -6,7 +6,7 @@ var React = require('react')
 var {Link, Navigation} = require('react-router')
 var promiseAgent = require('superagent-promise')
 
-var {API_URL} quire('../constants')
+var {API_URL} = require('../constants')
 var {ThingForm} = require('../forms')
 var env = require('../utils/env')
 var events = require('../utils/events')
