@@ -2,13 +2,14 @@
 
 var React = require('react')
 
-var Title = require('./DocumentTitle')
-
 var NotFound = React.createClass({
+  statics: {
+    title: '404 Not Found'
+  },
+
   render() {
     return <div className="NotFound">
-      <Title title="Not Found"/>
-      <h2>Not Found</h2>
+      <h2>404 Not Found</h2>
     </div>
   }
 })

@@ -14,7 +14,6 @@
     "newforms": "https://github.com/insin/newforms/archive/react.tar.gz",
     "promise": "^6.0.1",
     "react": "^0.12.1",
-    "react-document-title": "^0.1.3",
     "react-router": "^0.11.6",
     "run-auto": "^1.0.0",
     "serve-favicon": "^2.1.7",
