@@ -6,6 +6,8 @@ var nodemon = require('gulp-nodemon')
 var plumber = require('gulp-plumber')
 var react = require('gulp-react')
 var source = require('vinyl-source-stream')
+var streamify = require('gulp-streamify')
+var uglify = require('gulp-uglify')
 
 var jsSrcPaths = './src/**/*.js*'
 var jsLibPaths = './lib/**/*.js'
@@ -34,9 +36,14 @@ gulp.task('bundle-js', ['lint-js'], function() {
   })
   b.transform('envify')
 
-  return b.bundle()
+  var stream = b.bundle()
     .pipe(source('app.js'))
-    .pipe(gulp.dest('./static/js'))
+
+  if (gutil.env.production) {
+    stream = stream.pipe(streamify(uglify()))
+  }
+
+  return stream.pipe(gulp.dest('./static/js'))
 })
 
 gulp.task('server', function(cb) {
