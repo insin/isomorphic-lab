@@ -11,7 +11,7 @@
     "express-session": "^1.9.3",
     "jade": "^1.8.2",
     "morgan": "^1.5.0",
-    "newforms": "^0.10.0-alpha",
+    "newforms": "https://github.com/insin/newforms/archive/react.tar.gz",
     "promise": "^6.0.1",
     "react": "^0.12.1",
     "react-document-title": "^0.1.3",
