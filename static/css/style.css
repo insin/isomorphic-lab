@@ -6,7 +6,7 @@ nav a.active {
   text-decoration: none;
 }
 
-.Things__thing {
+.Thing {
   border-radius: .75em;
   border: 1px solid #000;
   display: inline-block;
@@ -14,7 +14,7 @@ nav a.active {
   overflow: hidden;
   vertical-align: top;
 }
-.Things__thing h3 {
+.Thing__name {
   background-color: #222;
   border-bottom: 1px solid #000;
   color: #00d8ff;
@@ -22,12 +22,12 @@ nav a.active {
   padding: .5em .75em;
   text-align: center;
 }
-.Things__thing-price {
+.Thing__price {
   border-bottom: 1px solid #000;
   padding: .5em .75em;
   text-align: center;
 }
-.Things__thing-description {
+.Thing__description {
   padding: .75em;
   white-space: pre-wrap;
 }
