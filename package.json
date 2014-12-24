@@ -36,6 +36,7 @@
     "vinyl-source-stream": "^1.0.0"
   },
   "scripts": {
+    "bundle": "gulp bundle-deps --production && gulp bundle-js --production",
     "start": "node lib/server"
   },
   "engines": {
