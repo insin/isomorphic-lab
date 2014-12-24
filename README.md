@@ -18,9 +18,9 @@ for discussion of implementation details.
 Before the top-level Handler for the current URL is rendered, the following will
 be done regardless of whether or not the app is running on the client or server:
 
-#### [`Data Fetching`](https://github.com/insin/isomorphic-lab/blob/master/src/utils/fetchData.js)
+#### [Data fetching](https://github.com/insin/isomorphic-lab/blob/master/src/utils/fetchData.js)
 
-Route handlers can define a static `fetchData([params,] callback)` function,
+Route handlers can define a static `fetchData([params,] callback(err, data))` function,
 which will be called when their route is matched against the current URL. This
 can be used to asynchronously load any data required by the component up-front,
 calling the callback when done.
@@ -28,18 +28,18 @@ calling the callback when done.
 Data will be passed as a `data` prop to the top-level Handler, with data
 returned from `fetchData()` calls keyed by route name.
 
-Use JSX spread attributeso to pass this all the way down the chain of route
+Use JSX spread attributes to to pass this all the way down the chain of route
 handlers:
 
 ```javascript
 <RouteHandler {...this.props}/>
 ```
 
-#### [`Title Generation`](https://github.com/insin/isomorphic-lab/blob/master/src/utils/getTitle.js)
+#### [Title generation](https://github.com/insin/isomorphic-lab/blob/master/src/utils/getTitle.js)
 
 Route handlers can define a static `title` attribute or a synchronous
-`getTitle(props, params)` function, which will be called when the corresponding
-route is matched against the current URL.
+`getTitle(props, params)` function, which will be called when the route is
+matched against the current URL.
 
 Any props which will be passed to the top-level Handler will be passed as the
 first argument to `getTitle()` - this will include a `data` prop containing any
@@ -52,8 +52,8 @@ blog post component might define a static `getTitle(props)` which returns the
 title of the post.
 
 By default, these title parts will be reversed and joined with a mid-dot to form
-the final title to be included in a `<title>` elemnt or set on `document.title`
-depending on the environment - this is configurable, though.
+the final title to be included in a `<title>` element or set on `document.title`
+depending on the environment - this is configurable.
 
 ### Client rehydration
 
@@ -74,12 +74,12 @@ app.use(reactRouter(routes[, options]))
 
 An object to be passed as options to `getTitle()` - available options are:
 
-`reverse` (default: `truer`) - should title parts be reversed into most-specific-first
-order before joining?
+`reverse` (`true`) - should title parts be reversed into
+most-specific-first order before joining?
 
-`join` (default: `' · '`) - string to be used to join title parts.
+`join` (`' · '`) - string to be used to join title parts.
 
-`defaultTitle` (default: `'(undefined)'`) - default title to use if none of the
+`defaultTitle` (`'(undefined)'`) - default title to use if none of the
 matched route handlers provide title parts.
 
 #### Response handling
@@ -89,7 +89,7 @@ middleware handles the following scenarios:
 
 ##### Successful rendering
 
-For a regular, successful render, a `'react'` view will be rendered with the
+For a regular, successful Handler render, a `'react'` view will be rendered with the
 following locals:
 
 `title` - generated document title
@@ -112,26 +112,29 @@ with the following locals:
 ##### POST requests
 
 Post request bodies will be added to the query object received by a route
-handler's static `willTransitionTo(transition, prarms, query)` function.
+handler's static [`willTransitionTo(transition, prarms, query)`](https://github.com/rackt/react-router/blob/master/docs/api/components/RouteHandler.md#willtransitiontotransition-params-query)
+function.
 
 A `_method` parameter equal to `'POST'` will also be added to distinguish POST
-requests from others.
+requests from others, if the same component is being used to handle GET rendering
+too.
 
 ##### Redirecting
 
-If `transition.redirect() is used in a `willTransitionTo()`, this will be turned
-into an HTTP 303 Redirect response.
+If [`transition.redirect()`](https://github.com/rackt/react-router/blob/master/docs/api/misc/transition.md#redirectto-params-query)
+is used in a `willTransitionTo()`, this will be turned into an HTTP 303 Redirect
+response.
 
 ##### Re-rendering
 
 If a [`Render`](https://github.com/insin/isomorphic-lab/blob/master/src/utils/Render.js)
-object is passed to `transition.abort()`, the middleware will run the router
-again for the given URL, passing any extra props given to the Handler for the
-URL.
+object is passed to `transition.abort()`, the middleware will run a new router
+for the given URL, passing any extra props given to the resulting Handler.
 
 This can be used to render the correct page back to the user with additional
 data it needs for display without having to serialize data into a query string
-or onto a session and redirecting them.
+or onto a session and redirecting them, e.g. displaying a form with user input
+and validation errors in response to a POST request with invalid data.
 
 ##### Errors
 
