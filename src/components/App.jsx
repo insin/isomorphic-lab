@@ -22,7 +22,8 @@ var App = React.createClass({
 
   render() {
     return <div className="App">
-      <h1><Link to="home">Isomorphic Lab</Link> <small>({this.state.server ? 'server' : 'client'} version)</small></h1>
+      <h1><Link to="home"><img src="/img/logo.png"/> Isomorphic Lab</Link> <small>({this.state.server ? 'server' : 'client'} version)</small></h1>
+      <hr/>
       <nav>
         <Link to="things">Things</Link>
       </nav>
