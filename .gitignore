@@ -1,3 +1,4 @@
 lib/
 node_modules/
 static/js/app.js
+static/js/deps.js

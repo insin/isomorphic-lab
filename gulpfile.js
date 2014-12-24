@@ -34,6 +34,14 @@ gulp.task('bundle-js', ['lint-js'], function() {
     debug: !!gutil.env.debug
   , detectGlobals: false
   })
+  b.external('events')
+  b.external('react/addons')
+  b.external('react')
+  b.external('react-router')
+  b.external('superagent')
+  b.external('superagent-promise')
+  b.external('newforms')
+  b.external('run-auto')
   b.transform('envify')
 
   var stream = b.bundle()
@@ -45,6 +53,33 @@ gulp.task('bundle-js', ['lint-js'], function() {
 
   return stream.pipe(gulp.dest('./static/js'))
 })
+
+gulp.task('bundle-deps', function() {
+  var b = browserify({
+    debug: !!gutil.env.debug
+  , detectGlobals: false
+  })
+  b.require('events')
+  b.require('react/addons')
+  b.require('react/addons', {expose: 'react'})
+  b.require('react-router')
+  b.require('superagent')
+  b.require('superagent-promise')
+  b.require('newforms')
+  b.require('run-auto')
+  b.transform('envify')
+
+  var stream = b.bundle()
+    .pipe(source('deps.js'))
+
+  if (gutil.env.production) {
+    stream = stream.pipe(streamify(uglify()))
+  }
+
+  return stream.pipe(gulp.dest('./static/js'))
+})
+
+gulp.task('bundle', ['bundle-deps', 'bundle-js'])
 
 gulp.task('server', function(cb) {
   nodemon({
