@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react')
+var {Link} = require('react-router')
 
 var Home = React.createClass({
   render() {
@@ -19,6 +20,15 @@ var Home = React.createClass({
         slow connection, or your mobile provider breaks stuff with poor attempts
         at script injection, or&hellip;), this app will keep working using HTTP
         round trips to the server.
+      </p>
+      <p>
+        One of the primary goals of this app is to figure out how to implement
+        isomorphic <code>&lt;form&gt;</code> submission and redisplay around the
+        field rendering and validation provided by
+        the <a href="https://github.com/insin/newforms">newforms</a> form library.
+      </p>
+      <p>
+        Why not try <Link to="addthing">adding a Thing</Link> to see how that's going?
       </p>
     </div>
   }
