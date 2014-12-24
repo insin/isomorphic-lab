@@ -1,5 +1,7 @@
 ## Isomorphic Lab
 
+![logo](https://github.com/insin/isomorphic-lab/raw/master/logo.png)
+
 This repo is being used to experiment with writing isomorphic JavaScript apps
 with [React](http://facebook.github.io/react/),
 [React Router](https://github.com/rackt/react-router) and
