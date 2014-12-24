@@ -1,10 +1,11 @@
 'use strict';
 
 var React = require('react')
-var {NotFoundRoute, Route} = require('react-router')
+var {DefaultRoute, NotFoundRoute, Route} = require('react-router')
 
 module.exports = [
-  <Route name="home" path="/" handler={require('./components/App')}>
+  <Route path="/" handler={require('./components/App')}>
+    <DefaultRoute name="home" handler={require('./components/Home')}/>
     <Route name="things" handler={require('./components/Things')}/>
     <Route name="thing" path="/thing/:num" handler={require('./components/Thing')}/>
     <Route name="addthing" handler={require('./components/AddThing')}/>

@@ -22,10 +22,11 @@ var App = React.createClass({
 
   render() {
     return <div className="App">
-      <h1><Link to="home">App</Link> <small>({this.state.server ? 'server' : 'client'} version)</small></h1>
+      <h1><Link to="home">Isomorphic Lab</Link> <small>({this.state.server ? 'server' : 'client'} version)</small></h1>
       <nav>
         <Link to="things">Things</Link>
       </nav>
+      <hr/>
       <RouteHandler {...this.props}/>
       <footer>
         <a href="https://github.com/insin/isomorphic-lab">
