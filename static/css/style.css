@@ -1,4 +1,9 @@
-body { font-family: 'Open Sans', sans-serif; }
+body {
+  font-family: 'Open Sans', sans-serif;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 70em;
+}
 
 nav { margin-bottom: 1em; }
 nav a.active {
