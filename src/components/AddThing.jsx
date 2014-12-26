@@ -24,7 +24,7 @@ var AddThing = React.createClass({
       if (query._method != 'POST') { return }
       delete query._method
 
-      transition.wait(promiseAgent.post(`${API_URL}/addthing`).send(query).end().then(res => {
+      transition.wait(promiseAgent.post(`${API_URL}/things`).send(query).end().then(res => {
         if (res.serverError) {
           throw new Error(`Server error: ${res.body}`)
         }

@@ -12,7 +12,7 @@ var Thing = React.createClass({
     },
 
     fetchData(params, cb) {
-      superagent.get(`${API_URL}/thing/${params.num}`).end(function(err, res) {
+      superagent.get(`${API_URL}/things/${params.num}`).end(function(err, res) {
         // TODO How should 404s be handled?
         cb(err, res && res.body)
       })

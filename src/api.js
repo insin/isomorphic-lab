@@ -15,7 +15,7 @@ router.get('/things', (req, res, next) => {
   res.json(THINGS)
 })
 
-router.get('/thing/:num', (req, res, next) => {
+router.get('/things/:num', (req, res, next) => {
   var {num} = req.params
   if (!/[1-9]|10/.test(num)) {
     return res.status(404).json({error: 'Invalid thing number.'})
@@ -27,7 +27,7 @@ router.get('/thing/:num', (req, res, next) => {
   res.json(THINGS[index])
 })
 
-router.post('/addthing', (req, res, next) => {
+router.post('/things', (req, res, next) => {
   var form = new ThingForm({data: req.body})
   // Extra validation to test display of server-only validation errors
   form.cleanName = function() {
