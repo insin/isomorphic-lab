@@ -6,6 +6,7 @@ var React = require('react')
 var {Link, Navigation} = require('react-router')
 var promiseAgent = require('superagent-promise')
 
+var Validating = require('./Validating')
 var {API_URL} = require('../constants')
 var {ThingForm} = require('../forms')
 var env = require('../utils/env')
@@ -92,6 +93,7 @@ var AddThing = React.createClass({
         <RenderForm form={ThingForm} ref="thingForm"
           data={this.props.initialData}
           errors={this.initialErrors}
+          progress={Validating}
         />
         <button>Submit</button> or <Link to="things">Cancel</Link>
       </form>

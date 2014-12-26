@@ -78,3 +78,6 @@ form label {
   display: block;
   margin-top: 4px;
 }
+.Validating {
+  color: #777;
+}
