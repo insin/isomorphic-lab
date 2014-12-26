@@ -1,6 +1,9 @@
 'use strict';
 
 var forms = require('newforms')
+var superagent = require('superagent')
+
+var {API_URL} = require('./constants')
 
 var ThingForm = forms.Form.extend({
   name: forms.CharField({maxLength: 25
@@ -13,6 +16,20 @@ var ThingForm = forms.Form.extend({
   , widget: forms.Textarea({attrs: {rows: 5, cols: 60}})
   , helpText: 'Up to 140 characters; no more than 5 lines.'
   }),
+
+  cleanName(cb) {
+    var {name} = this.cleanedData
+    superagent.get(`${API_URL}/things/checkname`).query({name}).accept('json').end((err, res) => {
+      if (err) { return cb(err) }
+      if (!res.ok) {
+        return cb(new Error(`${res.status} Response: ` + (res.body ? res.body.error : res.text)))
+      }
+      if (res.body.taken) {
+        return cb(null, 'This name is already taken - please choose another.')
+      }
+      cb(null)
+    })
+  },
 
   cleanDescription() {
     if (this.cleanedData.description.split(/\r\n|[\r\n]/).length > 5) {

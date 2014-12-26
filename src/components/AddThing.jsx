@@ -74,9 +74,11 @@ var AddThing = React.createClass({
   _onSubmit(e) {
     e.preventDefault()
     var form = this.refs.thingForm.getForm()
-    if (form.validate(this.refs.form)) {
-      this.transitionTo('/addthing', {}, assign({_method: 'POST'}, form.data))
-    }
+    form.validate(this.refs.form, (err, isValid) => {
+      if (isValid) {
+        this.transitionTo('/addthing', {}, assign({_method: 'POST'}, form.data))
+      }
+    })
   },
 
   _onErrors(errors) {
