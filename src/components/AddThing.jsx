@@ -86,7 +86,7 @@ var AddThing = React.createClass({
   render() {
     return <div className="AddThing">
       <h2>Add Thing</h2>
-      <form action="/addthing" method="POST" onSubmit={this._onSubmit} ref="form">
+      <form action="/addthing" method="POST" onSubmit={this._onSubmit} ref="form" autoComplete="off">
         <RenderForm form={ThingForm} ref="thingForm"
           data={this.props.initialData}
           errors={this.initialErrors}
