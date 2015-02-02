@@ -58,6 +58,12 @@ var AddThing = React.createClass({
     }
   },
 
+  getInitialState() {
+    return {
+      client: false
+    }
+  },
+
   componentWillMount: function() {
     if (this.props.initialErrors) {
       this.initialErrors = ErrorObject.fromJSON(this.props.initialErrors)
@@ -66,6 +72,7 @@ var AddThing = React.createClass({
 
   componentDidMount() {
     events.on(AddThing.ERRORS_EVENT, this._onErrors)
+    this.setState({client: true})
   },
 
   componentWillUnmount() {
@@ -89,7 +96,7 @@ var AddThing = React.createClass({
   render() {
     return <div className="AddThing">
       <h2>Add Thing</h2>
-      <form action="/addthing" method="POST" onSubmit={this._onSubmit} ref="form" autoComplete="off">
+      <form action="/addthing" method="POST" onSubmit={this._onSubmit} ref="form" autoComplete="off" noValidate={this.state.client}>
         <RenderForm form={ThingForm} ref="thingForm"
           data={this.props.initialData}
           errors={this.initialErrors}
