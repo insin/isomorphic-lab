@@ -7,5 +7,6 @@ var BASE_URL = env.SERVER ? `http://localhost:${PORT}` : ''
 
 module.exports = {
   API_URL: `${BASE_URL}/api`
+, FORUM_API_URL: `${BASE_URL}/forum-api`
 , TITLE: 'Isomorphic Lab'
 }

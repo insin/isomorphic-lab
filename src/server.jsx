@@ -12,7 +12,6 @@ var serveStatic = require('serve-static')
 //var session = require('express-session')
 
 var pkg = require('../package.json')
-var api = require('./api')
 var reactRouter = require('./react-router-middleware')
 
 var app = express()
@@ -28,7 +27,8 @@ app.use(favicon(path.join(__dirname, '../static/favicon.ico')))
 app.use(serveStatic(path.join(__dirname, '../static')))
 //app.use(session({secret: process.env.SECRET || 'secret', resave: false, saveUninitialized: true}))
 
-app.use('/api', api)
+app.use('/api', require('./api'))
+app.use('/forum-api', require('./forum-api'))
 
 app.use(reactRouter(require('./routes')))
 
