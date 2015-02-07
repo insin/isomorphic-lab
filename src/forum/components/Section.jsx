@@ -1,15 +1,16 @@
 'use strict';
 
 var React = require('react')
+var {Link} = require('react-router')
 
 var SectionForum = require('./SectionForum')
 
 var Section = React.createClass({
   render() {
-    var {name, description, forums} = this.props
+    var {id, name, description, forums} = this.props
     return <table className="Section">
       <caption>
-        <h2 className="Section__name"><a>{name}</a></h2>
+        <h2 className="Section__name"><Link to="section" params={{id}}>{name}</Link></h2>
         {description && <p className="Section__description">
           {description}
         </p>}

@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react')
+var {Link} = require('react-router')
 var superagent = require('superagent')
 
 var ForumTopic = require('./components/ForumTopic')
@@ -22,8 +23,11 @@ var Forum = React.createClass({
   },
 
   render() {
-    var {name, description, subforums, topics} = this.props.data.forum
+    var {name, description, subforums, topics, section} = this.props.data.forum
     return <div className="Forum">
+      <div className="Breadcrumbs">
+        <Link to="section" params={{id: section.id}}>{section.name}</Link>
+      </div>
       <h2 className="Forum__name">{name}</h2>
       {description && <p className="Forum__description">
         {description}
