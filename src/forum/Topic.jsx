@@ -11,7 +11,7 @@ var {FORUM_API_URL} = require('../constants')
 var Topic = React.createClass({
   statics: {
     getTitle(props, params) {
-      return props.data.topic.title
+      return `${props.data.topic.title} · ${props.data.topic.forum.name}`
     },
 
     fetchData(params, cb) {

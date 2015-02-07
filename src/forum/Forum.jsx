@@ -23,10 +23,12 @@ var Forum = React.createClass({
   },
 
   render() {
-    var {name, description, subforums, topics, section} = this.props.data.forum
+    var {id, name, description, subforums, topics, section} = this.props.data.forum
     return <div className="Forum">
       <div className="Breadcrumbs">
         <Link to="section" params={{id: section.id}}>{section.name}</Link>
+        {' → '}
+        <Link to="forum" params={{id}}>{name}</Link>
       </div>
       <h2 className="Forum__name">{name}</h2>
       {description && <p className="Forum__description">
@@ -38,6 +40,7 @@ var Forum = React.createClass({
           {subforums.map(forum => <SectionForum {...forum}/>)}
         </tbody>
       </table>}
+      <Link to="addTopic" params={{id}}>New Topic</Link>
       <table>
         <tbody>
           {topics.map(topic => <ForumTopic {...topic}/>)}

@@ -5,7 +5,7 @@ var {Link} = require('react-router')
 
 var SectionForum = React.createClass({
   render() {
-    var {id, name, slug, subforums, description, topics, replies} = this.props
+    var {id, name, subforums, description, topics, replies} = this.props
     return <tr className="SectionForum">
       <td>
         <h3 className="SectionForum__name">

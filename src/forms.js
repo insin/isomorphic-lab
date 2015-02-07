@@ -38,6 +38,12 @@ var ThingForm = forms.Form.extend({
   }
 })
 
+var TopicForm = forms.Form.extend({
+  title: forms.CharField(),
+  body: forms.CharField({widget: forms.Textarea})
+})
+
 module.exports = {
   ThingForm
+, TopicForm
 }
