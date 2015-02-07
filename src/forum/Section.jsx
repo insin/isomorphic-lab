@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react')
+var {Link} = require('react-router')
 var superagent = require('superagent')
 
 var SectionForum = require('./components/SectionForum')
@@ -21,8 +22,13 @@ var Section = React.createClass({
   },
 
   render() {
-    var {name, forums} = this.props.data.section
+    var {id, name, forums} = this.props.data.section
     return <div className="Section">
+      <div className="Breadcrumbs">
+        <Link to="forums">Forums</Link>
+        {' → '}
+        <Link to="section" params={{id}}>{name}</Link>
+      </div>
       <h2>{name}</h2>
       {forums.length > 0 && <table className="Section">
         <caption>Forums</caption>

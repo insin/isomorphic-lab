@@ -25,6 +25,8 @@ var Topic = React.createClass({
     var {title, posts, forum, section} = this.props.data.topic
     return <div className="Topic">
       <div className="Breadcrumbs">
+        <Link to="forums">Forums</Link>
+        {' → '}
         <Link to="section" params={{id: section.id}}>{section.name}</Link>
         {' → '}
         <Link to="forum" params={{id: forum.id}}>{forum.name}</Link>
