@@ -22,7 +22,7 @@ var Topic = React.createClass({
   },
 
   render() {
-    var {title, posts, forum, section} = this.props.data.topic
+    var {id, title, posts, forum, section} = this.props.data.topic
     return <div className="Topic">
       <div className="Breadcrumbs">
         <Link to="forums">Forums</Link>
@@ -32,6 +32,7 @@ var Topic = React.createClass({
         <Link to="forum" params={{id: forum.id}}>{forum.name}</Link>
       </div>
       <h2>{title}</h2>
+      <Link to="addReply" params={{id}}>Reply to this topic</Link>
       {posts.map(post => <Post {...post}/>)}
     </div>
   }

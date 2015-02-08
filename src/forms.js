@@ -43,7 +43,12 @@ var TopicForm = forms.Form.extend({
   body: forms.CharField({widget: forms.Textarea})
 })
 
+var ReplyForm = forms.Form.extend({
+  body: forms.CharField({widget: forms.Textarea})
+})
+
 module.exports = {
   ThingForm
 , TopicForm
+, ReplyForm
 }

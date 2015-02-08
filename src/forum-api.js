@@ -3,7 +3,7 @@
 var assign = require('react/lib/Object.assign')
 var express = require('express')
 
-var {TopicForm} = require('./forms')
+var {TopicForm, ReplyForm} = require('./forms')
 
 var router = express.Router()
 
@@ -30,9 +30,9 @@ var TOPIC_POSTS = {
 }
 
 var POSTS = {
-  1: {user: 1, body: 'Test Post 1'}
-, 2: {user: 2, body: 'Test Post 2'}
-, 3: {user: 1, body: 'Test Post 3'}
+  1: {body: 'Test Post 1'}
+, 2: {body: 'Test Post 2'}
+, 3: {body: 'Test Post 3'}
 }
 
 function addTopic(topic) {
@@ -43,11 +43,10 @@ function addTopic(topic) {
   return topic
 }
 
-function addPost(post) {
-  console.log(post)
+function addPost(post, topicId) {
   post.id = Object.keys(POSTS).length + 1
   POSTS[post.id] = post
-  TOPIC_POSTS[post.topic].push(post.id)
+  TOPIC_POSTS[topicId].push(post.id)
   return post
 }
 
@@ -102,11 +101,7 @@ router.post('/forum/:id/addTopic', (req, res, next) => {
     title: form.cleanedData.title
   , forum: Number(req.params.id)
   })
-  console.log(topic)
-  var post = addPost({
-    body: form.cleanedData.body
-  , topic: topic.id
-  })
+  var post = addPost({body: form.cleanedData.body}, topic.id)
   res.json({topic, post})
 })
 
@@ -128,6 +123,41 @@ router.get('/forum/:id', (req, res, next) => {
       }
     })
   )
+})
+
+router.get('/topic/:id/addReply', (req, res, next) => {
+  if (!TOPICS[req.params.id]) {
+    return res.sendStatus(404)
+  }
+  var topic = TOPICS[req.params.id]
+  var forum = FORUMS[topic.forum]
+  var section = SECTIONS[forum.section]
+  res.json(
+    assign({}, topic, {
+      forum: {
+        id: forum.id
+      , name: forum.name
+      }
+    , section: {
+        id: section.id
+      , name: section.name
+      }
+    })
+  )
+})
+
+router.post('/topic/:id/addReply', (req, res, next) => {
+  if (!TOPICS[req.params.id]) {
+    return res.sendStatus(404)
+  }
+
+  var form = new ReplyForm({data: req.body})
+  if (!form.validate()) {
+    return res.status(400).json(form.errors())
+  }
+
+  var post = addPost({body: form.cleanedData.body}, Number(req.params.id))
+  res.json(post)
 })
 
 router.get('/topic/:id', (req, res, next) => {

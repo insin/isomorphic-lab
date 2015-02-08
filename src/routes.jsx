@@ -14,6 +14,7 @@ module.exports = [
       <Route name="section" path="section/:id" handler={require('./forum/Section')}/>
       <Route name="addTopic" path="forum/:id/add-topic" handler={require('./forum/AddTopic')}/>
       <Route name="forum" path="forum/:id" handler={require('./forum/Forum')}/>
+      <Route name="addReply" path="topic/:id/addReply" handler={require('./forum/AddReply')}/>
       <Route name="topic" path="topic/:id" handler={require('./forum/Topic')}/>
     </Route>
   </Route>,
