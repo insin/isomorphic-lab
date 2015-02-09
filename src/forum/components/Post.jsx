@@ -5,7 +5,12 @@ var React = require('react')
 var Post = React.createClass({
   render() {
     return <div className="Post">
-      {this.props.body}
+      <div className="Post__header">
+        <a className="Post__username">Anonymous User</a>
+      </div>
+      <div className="Post__content">
+        <div className="Post__body">{this.props.body}</div>
+      </div>
     </div>
   }
 })

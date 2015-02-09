@@ -42,8 +42,10 @@ var Forum = React.createClass({
           {subforums.map(forum => <SectionForum {...forum}/>)}
         </tbody>
       </table>}
-      <Link to="addTopic" params={{id}}>New Topic</Link>
-      <table>
+      <div className="Forum__controls">
+        <Link to="addTopic" params={{id}}>New Topic</Link>
+      </div>
+      <table className="Forum__topics">
         <tbody>
           {topics.map(topic => <ForumTopic {...topic}/>)}
         </tbody>

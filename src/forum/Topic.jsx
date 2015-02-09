@@ -32,7 +32,9 @@ var Topic = React.createClass({
         <Link to="forum" params={{id: forum.id}}>{forum.name}</Link>
       </div>
       <h2>{title}</h2>
-      <Link to="addReply" params={{id}}>Reply to this topic</Link>
+      <div className="Topic__controls">
+        <Link to="addReply" params={{id}}>Reply to this topic</Link>
+      </div>
       {posts.map(post => <Post {...post}/>)}
     </div>
   }
