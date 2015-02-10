@@ -5,7 +5,7 @@ var querystring = require('querystring')
 var assign = require('react/lib/Object.assign')
 var React = require('react')
 var Router = require('react-router')
-var Redirect = require('react-router/modules/utils/Redirect')
+var Redirect = require('react-router/modules/Redirect')
 
 var fetchData = require('./utils/fetchData')
 var getTitle = require('./utils/getTitle')

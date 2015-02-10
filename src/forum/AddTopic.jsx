@@ -4,7 +4,6 @@ var assign = require('react/lib/Object.assign')
 var {ErrorObject, RenderForm} = require('newforms')
 var React = require('react')
 var {Link, Navigation} = require('react-router')
-var promiseAgent = require('superagent-promise')
 var superagent = require('superagent')
 
 var {FORUM_API_URL} = require('../constants')
@@ -29,13 +28,13 @@ var AddTopic = React.createClass({
       })
     },
 
-    willTransitionTo(transition, params, query) {
-      if (query._method != 'POST') { return }
+    willTransitionTo(transition, params, query, cb) {
+      if (query._method != 'POST') { return cb() }
       delete query._method
 
-      transition.wait(promiseAgent.post(`${FORUM_API_URL}/forum/${params.id}/addTopic`).send(query).end().then(res => {
+      superagent.post(`${FORUM_API_URL}/forum/${params.id}/addTopic`).send(query).end(res => {
         if (res.serverError) {
-          throw new Error(`Server error: ${res.body}`)
+          return cb(new Error(`Server error: ${res.body}`))
         }
 
         if (res.clientError) {
@@ -55,7 +54,8 @@ var AddTopic = React.createClass({
         else if (res.ok) {
           transition.redirect(`/forums/topic/${res.body.topic.id}`)
         }
-      }))
+        cb()
+      })
     }
   },
 

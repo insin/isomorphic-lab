@@ -4,7 +4,7 @@ var assign = require('react/lib/Object.assign')
 var {ErrorObject, RenderForm} = require('newforms')
 var React = require('react')
 var {Link, Navigation} = require('react-router')
-var promiseAgent = require('superagent-promise')
+var superagent = require('superagent')
 
 var Validating = require('./Validating')
 var {API_URL} = require('../constants')
@@ -21,13 +21,13 @@ var AddThing = React.createClass({
 
     title: 'Add Thing',
 
-    willTransitionTo(transition, params, query) {
-      if (query._method != 'POST') { return }
+    willTransitionTo(transition, params, query, cb) {
+      if (query._method != 'POST') { return cb() }
       delete query._method
 
-      transition.wait(promiseAgent.post(`${API_URL}/things`).send(query).end().then(res => {
+      superagent.post(`${API_URL}/things`).send(query).end(res => {
         if (res.serverError) {
-          throw new Error(`Server error: ${res.body}`)
+          return cb(new Error(`Server error: ${res.body}`))
         }
 
         if (res.clientError) {
@@ -47,7 +47,8 @@ var AddThing = React.createClass({
         else if (res.ok) {
           transition.redirect('/things')
         }
-      }))
+        cb()
+      })
     }
   },
 
