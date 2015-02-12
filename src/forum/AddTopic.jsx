@@ -41,7 +41,7 @@ var AddTopic = React.createClass({
             errors: res.body
           })
         }
-        else if (res.ok) {
+        else {
           transition.redirect('topic', {id: res.body.topic.id})
         }
         cb()
