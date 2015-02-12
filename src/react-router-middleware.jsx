@@ -1,15 +1,14 @@
 'use strict';
 
-var querystring = require('querystring')
-
-var assign = require('react/lib/Object.assign')
 var React = require('react')
+var assign = require('react/lib/Object.assign')
 var Router = require('react-router')
 var Redirect = require('react-router/modules/Redirect')
 
+var {StaticLocation} = Router
+
 var fetchData = require('./utils/fetchData')
 var getTitle = require('./utils/getTitle')
-var Render = require('./utils/Render')
 
 module.exports = function(routes, options) {
   if (!routes) {
@@ -17,7 +16,7 @@ module.exports = function(routes, options) {
   }
   options = assign({title: {}}, options)
 
-  function renderApp(location, extraProps, cb) {
+  function renderApp(location, cb) {
     var router = Router.create({
       location,
       routes,
@@ -27,13 +26,10 @@ module.exports = function(routes, options) {
           cb(reason)
         }
         else if (reason instanceof Redirect) {
-          cb(null, {redirect: reason})
-        }
-        else if (reason instanceof Render) {
-          cb(null, {render: reason})
+          cb(null, router, {redirect: reason})
         }
         else {
-          cb(null, reason)
+          cb(null, router, reason)
         }
       },
 
@@ -46,20 +42,18 @@ module.exports = function(routes, options) {
       if (state.routes[0].name == 'notfound') {
         var html = React.renderToStaticMarkup(<Handler/>)
         var title = getTitle(state.routes, {}, {})
-        return cb(null, {notFound: true}, html, null, title)
+        return cb(null, router, {notFound: true}, html, null, title)
       }
-      fetchData(state.routes, state.params, (err, props) => {
-        if (extraProps) {
-          assign(props, extraProps)
-        }
+      fetchData(state.routes, state.params, (err, fetchedData) => {
+        var props = assign({}, fetchedData, state.payload)
         var html = React.renderToString(<Handler {...props}/>)
         var title = getTitle(state.routes, state.params, props, options.title)
-        cb(null, null, html, JSON.stringify(props), title)
+        cb(null, router, null, html, JSON.stringify(props), title)
       })
     })
   }
 
-  function renderAppHandler(res, next, err, special, html, props, title) {
+  function renderAppHandler(res, next, err, router, special, html, props, title) { // ಠ_ಠ
     if (err) {
       return next(err)
     }
@@ -72,11 +66,20 @@ module.exports = function(routes, options) {
       res.status(404).render('react-404', {title, html})
     }
     else if (special.redirect) {
-      res.redirect(303, special.redirect.to)
-    }
-    else if (special.render) {
-      var {url, extraProps} = special.render
-      renderApp(url, extraProps, renderAppHandler.bind(null, res, next))
+      var redirect = special.redirect
+      var path = router.makePath(redirect.to, redirect.params, redirect.query)
+      // Rather than introducing a server-specific abort reason object, use the
+      // fact that a redirect has a payload as an indication that a response
+      // should be rendered directly.
+      if (redirect.payload) {
+        renderApp(
+          new StaticLocation(path, redirect.payload),
+          renderAppHandler.bind(null, res, next)
+        )
+      }
+      else {
+        res.redirect(303, path)
+      }
     }
     else {
       console.error('Unexpected special response case: ', special.constructor, special)
@@ -85,11 +88,12 @@ module.exports = function(routes, options) {
   }
 
   return function reactRouter(req, res, next) {
-    var url = req.url
-    // Use query params to pass POST data to willTransitionTo
-    if (req.method == 'POST') {
-      url += `?_method=${req.method}&${querystring.stringify(req.body)}`
+    // Provide the method and body of non-GET requests as a payload object
+    var payload = null
+    if (req.method != 'GET') {
+      payload = {method: req.method, body: req.body}
     }
-    renderApp(url, null, renderAppHandler.bind(null, res, next))
+    var location = new StaticLocation(req.url, payload)
+    renderApp(location, renderAppHandler.bind(null, res, next))
   }
 }

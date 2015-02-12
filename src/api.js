@@ -27,7 +27,8 @@ router.get('/things', (req, res, next) => {
 
 router.post('/things', (req, res, next) => {
   var form = new ThingForm({data: req.body})
-  // Extra validation to test display of server-only validation errors
+  // Extra validation to test display of server-only validation errors when JS
+  // runs on the client.
   form.clean = function() {
     var {name, description} = this.cleanedData
     if (/clown/i.test(name + description)) {

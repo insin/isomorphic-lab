@@ -1,6 +1,5 @@
 'use strict';
 
-var assign = require('react/lib/Object.assign')
 var {ErrorObject, RenderForm} = require('newforms')
 var React = require('react')
 var {Link, Navigation} = require('react-router')
@@ -9,53 +8,37 @@ var superagent = require('superagent')
 var Validating = require('./Validating')
 var {API_URL} = require('../constants')
 var {ThingForm} = require('../forms')
-var env = require('../utils/env')
-var events = require('../utils/events')
-var Render = require('../utils/Render')
 
 var AddThing = React.createClass({
   mixins: [Navigation],
 
-  statics: {
-    ERRORS_EVENT: 'AddThing:errors',
+  propTypes: {
+    data: React.PropTypes.object,
+    errors: React.PropTypes.object
+  },
 
+  statics: {
     title: 'Add Thing',
 
-    willTransitionTo(transition, params, query, cb) {
-      if (query._method != 'POST') { return cb() }
-      delete query._method
+    willTransitionTo(transition, params, query, payload, cb) {
+      if (payload.method != 'POST') { return cb() }
 
-      superagent.post(`${API_URL}/things`).send(query).end(res => {
+      superagent.post(`${API_URL}/things`).send(payload.body).end(res => {
         if (res.serverError) {
           return cb(new Error(`Server error: ${res.body}`))
         }
 
         if (res.clientError) {
-          if (env.CLIENT) {
-            // Update the form with validation errors received from the API
-            events.emit(AddThing.ERRORS_EVENT, ErrorObject.fromJSON(res.body))
-            transition.abort()
-          }
-          else {
-            // Re-render with user input + validation errors from the API
-            transition.abort(new Render('/addthing', {
-              initialData: query
-            , initialErrors: res.body
-            }))
-          }
+          transition.redirect('addthing', {}, {}, {
+            data: payload.body,
+            errors: res.body
+          })
         }
-        else if (res.ok) {
-          transition.redirect('/things')
+        else {
+          transition.redirect('things')
         }
         cb()
       })
-    }
-  },
-
-  getDefaultProps() {
-    return {
-      initialData: null
-    , initialErrors: null
     }
   },
 
@@ -65,19 +48,20 @@ var AddThing = React.createClass({
     }
   },
 
-  componentWillMount: function() {
-    if (this.props.initialErrors) {
-      this.initialErrors = ErrorObject.fromJSON(this.props.initialErrors)
-    }
-  },
-
   componentDidMount() {
-    events.on(AddThing.ERRORS_EVENT, this._onErrors)
     this.setState({client: true})
   },
 
-  componentWillUnmount() {
-    events.removeListener(AddThing.ERRORS_EVENT, this._onErrors)
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      var errorObject = this._getErrorObject(nextProps.errors)
+      this.refs.thingForm.getForm().setErrors(errorObject)
+    }
+  },
+
+  _getErrorObject(errors) {
+    if (!errors) { errors = this.props.errors }
+    return errors ? ErrorObject.fromJSON(errors) : null
   },
 
   _onSubmit(e) {
@@ -85,13 +69,12 @@ var AddThing = React.createClass({
     var form = this.refs.thingForm.getForm()
     form.validate(this.refs.form, (err, isValid) => {
       if (isValid) {
-        this.transitionTo('/addthing', {}, assign({_method: 'POST'}, form.data))
+        this.transitionTo('/addthing', {}, {}, {
+          method: 'POST',
+          body: form.data
+        })
       }
     })
-  },
-
-  _onErrors(errors) {
-    this.refs.thingForm.getForm().setErrors(errors)
   },
 
   render() {
@@ -99,8 +82,8 @@ var AddThing = React.createClass({
       <h2>Add Thing</h2>
       <form action="/addthing" method="POST" onSubmit={this._onSubmit} ref="form" autoComplete="off" noValidate={this.state.client}>
         <RenderForm form={ThingForm} ref="thingForm"
-          data={this.props.initialData}
-          errors={this.initialErrors}
+          data={this.props.data}
+          errors={this._getErrorObject()}
           progress={Validating}
         />
         <button>Submit</button> or <Link to="things">Cancel</Link>
