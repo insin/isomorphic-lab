@@ -1,6 +1,5 @@
 'use strict';
 
-var assign = require('react/lib/Object.assign')
 var {ErrorObject, RenderForm} = require('newforms')
 var React = require('react')
 var {Link, Navigation} = require('react-router')
@@ -8,16 +7,16 @@ var superagent = require('superagent')
 
 var {FORUM_API_URL} = require('../constants')
 var {TopicForm} = require('../forms')
-var env = require('../utils/env')
-var events = require('../utils/events')
-var Render = require('../utils/Render')
 
 var AddTopic = React.createClass({
   mixins: [Navigation],
 
-  statics: {
-    ERRORS_EVENT: 'AddTopic:errors',
+  propTypes: {
+    data: React.PropTypes.object,
+    errors: React.PropTypes.object
+  },
 
+  statics: {
     getTitle(props) {
       return `Posting a New Topic in ${props.data.addTopic.name}`
     },
@@ -28,41 +27,25 @@ var AddTopic = React.createClass({
       })
     },
 
-    willTransitionTo(transition, params, query, cb) {
-      if (query._method != 'POST') { return cb() }
-      delete query._method
+    willTransitionTo(transition, params, query, payload, cb) {
+      if (payload.method != 'POST') { return cb() }
 
-      superagent.post(`${FORUM_API_URL}/forum/${params.id}/addTopic`).send(query).end(res => {
+      superagent.post(`${FORUM_API_URL}/forum/${params.id}/addTopic`).send(payload.body).end(res => {
         if (res.serverError) {
           return cb(new Error(`Server error: ${res.body}`))
         }
 
         if (res.clientError) {
-          if (env.CLIENT) {
-            // Update the form with validation errors received from the API
-            events.emit(AddTopic.ERRORS_EVENT, ErrorObject.fromJSON(res.body))
-            transition.abort()
-          }
-          else {
-            // Re-render with user input + validation errors from the API
-            transition.abort(new Render(`/forums/forum/${params.id}/add-topic`, {
-              initialData: query
-            , initialErrors: res.body
-            }))
-          }
+          transition.redirect('addTopic', params, {}, {
+            data_: payload.body,
+            errors: res.body
+          })
         }
         else if (res.ok) {
-          transition.redirect(`/forums/topic/${res.body.topic.id}`)
+          transition.redirect('topic', {id: res.body.topic.id})
         }
         cb()
       })
-    }
-  },
-
-  getDefaultProps() {
-    return {
-      initialData: null
-    , initialErrors: null
     }
   },
 
@@ -72,35 +55,31 @@ var AddTopic = React.createClass({
     }
   },
 
-  componentWillMount: function() {
-    if (this.props.initialErrors) {
-      this.initialErrors = ErrorObject.fromJSON(this.props.initialErrors)
-    }
-  },
-
   componentDidMount() {
-    events.on(AddTopic.ERRORS_EVENT, this._onErrors)
     this.setState({client: true})
   },
 
-  componentWillUnmount() {
-    events.removeListener(AddTopic.ERRORS_EVENT, this._onErrors)
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      var errorObject = this._getErrorObject(nextProps.errors)
+      this.refs.topicForm.getForm().setErrors(errorObject)
+    }
+  },
+
+  _getErrorObject(errors) {
+    if (!errors) { errors = this.props.errors }
+    return errors ? ErrorObject.fromJSON(errors) : null
   },
 
   _onSubmit(e) {
     e.preventDefault()
     var form = this.refs.topicForm.getForm()
     if (form.validate(this.refs.form)) {
-      this.transitionTo(
-        this.makeHref('addTopic', {id: this.props.data.addTopic.id}),
-        {},
-        assign({_method: 'POST'}, form.data)
-      )
+      this.transitionTo('addTopic', {id: this.props.data.addTopic.id}, {}, {
+        method: 'POST',
+        body: form.data
+      })
     }
-  },
-
-  _onErrors(errors) {
-    this.refs.topicForm.getForm().setErrors(errors)
   },
 
   render() {
@@ -116,8 +95,8 @@ var AddTopic = React.createClass({
       <h2>Posting a New Topic in {name}</h2>
       <form action={this.makeHref('addTopic', {id})} method="POST" onSubmit={this._onSubmit} ref="form" autoComplete="off" noValidate={this.state.client}>
         <RenderForm form={TopicForm} ref="topicForm"
-          data={this.props.initialData}
-          errors={this.initialErrors}
+          data={this.props.data_}
+          errors={this._getErrorObject()}
         />
         <button>Submit</button> or <Link to="forum" params={{id}}>Cancel</Link>
       </form>
