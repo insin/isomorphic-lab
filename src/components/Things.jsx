@@ -37,7 +37,7 @@ var Things = React.createClass({
         </div>
       </div>)}
       <hr/>
-      <Link to="addthing">Add Thing</Link>
+      <Link to="addThing">Add Thing</Link>
     </div>
   }
 })

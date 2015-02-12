@@ -29,7 +29,7 @@ var AddThing = React.createClass({
         }
 
         if (res.clientError) {
-          transition.redirect('addthing', {}, {}, {
+          transition.redirect('addThing', {}, {}, {
             data: payload.body,
             errors: res.body
           })
@@ -69,7 +69,7 @@ var AddThing = React.createClass({
     var form = this.refs.thingForm.getForm()
     form.validate(this.refs.form, (err, isValid) => {
       if (isValid) {
-        this.transitionTo('/addthing', {}, {}, {
+        this.transitionTo('addThing', {}, {}, {
           method: 'POST',
           body: form.data
         })
