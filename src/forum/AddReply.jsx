@@ -24,7 +24,7 @@ var AddReply = React.createClass({
 
     fetchData(params, cb) {
       superagent.get(`${FORUM_API_URL}/topic/${params.id}/addReply`).end(function(err, res) {
-        cb(err, res && res.body)
+        cb(err, res && {addReply: res.body})
       })
     },
 

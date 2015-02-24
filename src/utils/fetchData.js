@@ -1,6 +1,7 @@
 'use strict';
 
-var runAuto = require('run-auto')
+var assign = require('react/lib/Object.assign')
+var runParallel = require('run-parallel')
 
 var env = require('./env')
 
@@ -16,17 +17,16 @@ function fetchData(routes, params, cb) {
     return cb(null, {})
   }
 
-  var dataFetchers = {}
-  fetchDataRoutes.forEach(route => {
+  var dataFetchers = fetchDataRoutes.map(route => {
     var fetcher = route.handler.fetchData
     if (fetcher.length == 2) {
       fetcher = fetcher.bind(null, params)
     }
-    dataFetchers[route.name] = fetcher
+    return fetcher
   })
 
-  runAuto(dataFetchers, function(err, data) {
-    cb(err, {data})
+  runParallel(dataFetchers, function(err, data) {
+    cb(err, {data: assign.apply(null, data)})
   })
 }
 
