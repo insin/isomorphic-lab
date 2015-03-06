@@ -12,7 +12,7 @@ var Things = React.createClass({
 
     fetchData(cb) {
       superagent.get(`${API_URL}/things`).accept('json').end(function(err, res) {
-        cb(err, res && res.body)
+        cb(err, res && {things: res.body})
       })
     }
   },

@@ -23,7 +23,7 @@ var AddTopic = React.createClass({
 
     fetchData(params, cb) {
       superagent.get(`${FORUM_API_URL}/forum/${params.id}/addTopic`).end(function(err, res) {
-        cb(err, res && res.body)
+        cb(err, res && {addTopic: res.body})
       })
     },
 

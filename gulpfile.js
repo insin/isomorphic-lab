@@ -40,7 +40,7 @@ gulp.task('bundle-js', ['lint-js'], function() {
   b.external('react-router')
   b.external('superagent')
   b.external('newforms')
-  b.external('run-auto')
+  b.external('run-parallel')
   b.transform('envify')
 
   var stream = b.bundle()
@@ -64,7 +64,7 @@ gulp.task('bundle-deps', function() {
   b.require('react-router')
   b.require('superagent')
   b.require('newforms')
-  b.require('run-auto')
+  b.require('run-parallel')
   b.transform('envify')
 
   var stream = b.bundle()

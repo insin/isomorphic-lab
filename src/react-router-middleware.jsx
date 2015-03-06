@@ -3,7 +3,7 @@
 var React = require('react')
 var assign = require('react/lib/Object.assign')
 var Router = require('react-router')
-var Redirect = require('react-router/modules/Redirect')
+var Redirect = require('react-router/lib/Redirect')
 
 var {StaticLocation} = Router
 
