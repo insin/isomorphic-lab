@@ -12,7 +12,7 @@
     "morgan": "^1.5.1",
     "newforms": "^0.10.1",
     "react": "^0.12.2",
-    "react-router": "^0.12.2",
+    "react-router": "^0.12.4",
     "run-parallel": "^1.0.0",
     "serve-favicon": "^2.2.0",
     "serve-static": "^1.8.1",
