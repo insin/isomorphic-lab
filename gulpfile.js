@@ -12,6 +12,15 @@ var uglify = require('gulp-uglify')
 var jsSrcPaths = './src/**/*.js*'
 var jsLibPaths = './lib/**/*.js'
 
+var bundledDeps = [
+  'events',
+  'react',
+  'react-router',
+  'superagent',
+  'newforms',
+  'run-parallel'
+]
+
 process.env.NODE_ENV = gutil.env.production ? 'production' : 'development'
 process.env.HOST = '127.0.0.1'
 process.env.PORT = '3000'
@@ -34,13 +43,7 @@ gulp.task('bundle-js', ['lint-js'], function() {
     debug: !!gutil.env.debug
   , detectGlobals: false
   })
-  b.external('events')
-  b.external('react/addons')
-  b.external('react')
-  b.external('react-router')
-  b.external('superagent')
-  b.external('newforms')
-  b.external('run-parallel')
+  bundledDeps.forEach(function(dep) { b.external(dep) })
   b.transform('envify')
 
   var stream = b.bundle()
@@ -58,13 +61,7 @@ gulp.task('bundle-deps', function() {
     debug: !!gutil.env.debug
   , detectGlobals: false
   })
-  b.require('events')
-  b.require('react/addons')
-  b.require('react/addons', {expose: 'react'})
-  b.require('react-router')
-  b.require('superagent')
-  b.require('newforms')
-  b.require('run-parallel')
+  bundledDeps.forEach(function(dep) { b.require(dep) })
   b.transform('envify')
 
   var stream = b.bundle()
