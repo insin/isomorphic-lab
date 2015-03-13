@@ -43,7 +43,7 @@ module.exports = function(routes, options) {
     })
 
     router.run((Handler, state) => {
-      if (state.routes[0].name == 'notfound') {
+      if (state.routes[0].name == 'notFound') {
         var html = React.renderToStaticMarkup(<Handler/>)
         var title = getTitle(state.routes, {}, {})
         return cb(null, {notFound: true}, html, null, title)

@@ -25,10 +25,8 @@ var AddThing = React.createClass({
       if (query._method != 'POST') { return cb() }
       delete query._method
 
-      superagent.post(`${API_URL}/things`).send(query).end(res => {
-        if (res.serverError) {
-          return cb(new Error(`Server error: ${res.body}`))
-        }
+      superagent.post(`${API_URL}/things`).send(query).end((err, res) => {
+        if (err && (!err.response || err.response.serverError)) { return cb(err) }
 
         if (res.clientError) {
           if (env.CLIENT) {
@@ -38,7 +36,7 @@ var AddThing = React.createClass({
           }
           else {
             // Re-render with user input + validation errors from the API
-            transition.abort(new Render('/addthing', {
+            transition.abort(new Render('/add-thing', {
               initialData: query
             , initialErrors: res.body
             }))
@@ -85,7 +83,7 @@ var AddThing = React.createClass({
     var form = this.refs.thingForm.getForm()
     form.validate(this.refs.form, (err, isValid) => {
       if (isValid) {
-        this.transitionTo('/addthing', {}, assign({_method: 'POST'}, form.data))
+        this.transitionTo('/add-thing', {}, assign({_method: 'POST'}, form.data))
       }
     })
   },
@@ -97,7 +95,7 @@ var AddThing = React.createClass({
   render() {
     return <div className="AddThing">
       <h2>Add Thing</h2>
-      <form action="/addthing" method="POST" onSubmit={this._onSubmit} ref="form" autoComplete="off" noValidate={this.state.client}>
+      <form action={this.makeHref('addThing')} method="POST" onSubmit={this._onSubmit} ref="form" autoComplete="off" noValidate={this.state.client}>
         <RenderForm form={ThingForm} ref="thingForm"
           data={this.props.initialData}
           errors={this.initialErrors}

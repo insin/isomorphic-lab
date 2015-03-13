@@ -15,7 +15,7 @@ var Section = React.createClass({
     },
 
     fetchData(params, cb) {
-      superagent.get(`${FORUM_API_URL}/section/${params.id}`).end(function(err, res) {
+      superagent.get(`${FORUM_API_URL}/section/${params.id}`).end((err, res) => {
         cb(err, res && {section: res.body})
       })
     }

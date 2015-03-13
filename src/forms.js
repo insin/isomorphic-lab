@@ -21,9 +21,6 @@ var ThingForm = forms.Form.extend({
     var {name} = this.cleanedData
     superagent.get(`${API_URL}/things/checkname`).query({name}).accept('json').end((err, res) => {
       if (err) { return cb(err) }
-      if (!res.ok) {
-        return cb(new Error(`${res.status} Response: ` + (res.body ? res.body.error : res.text)))
-      }
       if (res.body.taken) {
         return cb(null, 'This name is already taken - please choose another.')
       }

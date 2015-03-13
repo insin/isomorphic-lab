@@ -28,7 +28,7 @@ var Home = React.createClass({
         the <a href="https://github.com/insin/newforms">newforms</a> form library.
       </p>
       <p>
-        Why not try <Link to="addthing">adding a Thing</Link> to see how that's going?
+        Why not try <Link to="addThing">adding a Thing</Link> to see how that's going?
       </p>
     </div>
   }

@@ -23,7 +23,7 @@ var AddReply = React.createClass({
     },
 
     fetchData(params, cb) {
-      superagent.get(`${FORUM_API_URL}/topic/${params.id}/addReply`).end(function(err, res) {
+      superagent.get(`${FORUM_API_URL}/topic/${params.id}/add-reply`).end((err, res) => {
         cb(err, res && {addReply: res.body})
       })
     },
@@ -32,10 +32,8 @@ var AddReply = React.createClass({
       if (query._method != 'POST') { return cb() }
       delete query._method
 
-      superagent.post(`${FORUM_API_URL}/topic/${params.id}/addReply`).send(query).end(res => {
-        if (res.serverError) {
-          return cb(new Error(`Server error: ${res.body}`))
-        }
+      superagent.post(`${FORUM_API_URL}/topic/${params.id}/add-reply`).send(query).end((err, res) => {
+        if (err && (!err.response || err.response.serverError)) { return cb(err) }
 
         if (res.clientError) {
           if (env.CLIENT) {
@@ -72,7 +70,7 @@ var AddReply = React.createClass({
     }
   },
 
-  componentWillMount: function() {
+  componentWillMount() {
     if (this.props.initialErrors) {
       this.initialErrors = ErrorObject.fromJSON(this.props.initialErrors)
     }

@@ -15,7 +15,7 @@ var Topic = React.createClass({
     },
 
     fetchData(params, cb) {
-      superagent.get(`${FORUM_API_URL}/topic/${params.id}`).end(function(err, res) {
+      superagent.get(`${FORUM_API_URL}/topic/${params.id}`).end((err, res) => {
         cb(err, res && {topic: res.body})
       })
     }

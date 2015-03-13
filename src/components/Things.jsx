@@ -11,7 +11,7 @@ var Things = React.createClass({
     title: 'Things',
 
     fetchData(cb) {
-      superagent.get(`${API_URL}/things`).accept('json').end(function(err, res) {
+      superagent.get(`${API_URL}/things`).accept('json').end((err, res) => {
         cb(err, res && {things: res.body})
       })
     }
@@ -37,7 +37,7 @@ var Things = React.createClass({
         </div>
       </div>)}
       <hr/>
-      <Link to="addthing">Add Thing</Link>
+      <Link to="addThing">Add Thing</Link>
     </div>
   }
 })

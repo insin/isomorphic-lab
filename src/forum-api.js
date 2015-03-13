@@ -71,7 +71,7 @@ router.get('/section/:id', (req, res, next) => {
   res.json(getSection(req.params.id))
 })
 
-router.get('/forum/:id/addTopic', (req, res, next) => {
+router.get('/forum/:id/add-topic', (req, res, next) => {
   if (!FORUMS[req.params.id]) {
     return res.sendStatus(404)
   }
@@ -87,7 +87,7 @@ router.get('/forum/:id/addTopic', (req, res, next) => {
   )
 })
 
-router.post('/forum/:id/addTopic', (req, res, next) => {
+router.post('/forum/:id/add-topic', (req, res, next) => {
   if (!FORUMS[req.params.id]) {
     return res.sendStatus(404)
   }
@@ -125,7 +125,7 @@ router.get('/forum/:id', (req, res, next) => {
   )
 })
 
-router.get('/topic/:id/addReply', (req, res, next) => {
+router.get('/topic/:id/add-reply', (req, res, next) => {
   if (!TOPICS[req.params.id]) {
     return res.sendStatus(404)
   }
@@ -146,7 +146,7 @@ router.get('/topic/:id/addReply', (req, res, next) => {
   )
 })
 
-router.post('/topic/:id/addReply', (req, res, next) => {
+router.post('/topic/:id/add-reply', (req, res, next) => {
   if (!TOPICS[req.params.id]) {
     return res.sendStatus(404)
   }
