@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react')
-var superagent = require('superagent')
+var superagent = require('superagent-ls')
 
 var Section = require('./components/Section')
 

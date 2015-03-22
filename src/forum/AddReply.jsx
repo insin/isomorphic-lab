@@ -4,7 +4,7 @@ var assign = require('react/lib/Object.assign')
 var {ErrorObject, RenderForm} = require('newforms')
 var React = require('react')
 var {Link, Navigation} = require('react-router')
-var superagent = require('superagent')
+var superagent = require('superagent-ls')
 
 var {FORUM_API_URL} = require('../constants')
 var {ReplyForm} = require('../forms')
@@ -33,7 +33,7 @@ var AddReply = React.createClass({
       delete query._method
 
       superagent.post(`${FORUM_API_URL}/topic/${params.id}/add-reply`).send(query).end((err, res) => {
-        if (err && (!err.response || err.response.serverError)) { return cb(err) }
+        if (err) { return cb(err) }
 
         if (res.clientError) {
           if (env.CLIENT) {

@@ -1,7 +1,7 @@
 'use strict';
 
 var forms = require('newforms')
-var superagent = require('superagent')
+var superagent = require('superagent-ls')
 
 var {API_URL} = require('./constants')
 

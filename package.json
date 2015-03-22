@@ -17,7 +17,7 @@
     "serve-favicon": "^2.2.0",
     "serve-static": "^1.9.1",
     "setimmediate": "^1.0.2",
-    "superagent": "~1.1.0"
+    "superagent-ls": "~1.1.0"
   },
   "devDependencies": {
     "browserify": "^9.0.3",

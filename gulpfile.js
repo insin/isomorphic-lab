@@ -16,7 +16,7 @@ var bundledDeps = [
   'events',
   'react',
   'react-router',
-  'superagent',
+  'superagent-ls',
   'newforms',
   'run-parallel'
 ]
@@ -40,8 +40,8 @@ gulp.task('lint-js', ['transpile-js'], function() {
 
 gulp.task('bundle-js', ['lint-js'], function() {
   var b = browserify('./lib/client.js', {
-    debug: !!gutil.env.debug
-  , detectGlobals: false
+    debug: !!gutil.env.debug,
+    detectGlobals: false
   })
   bundledDeps.forEach(function(dep) { b.external(dep) })
   b.transform('envify')
@@ -58,8 +58,8 @@ gulp.task('bundle-js', ['lint-js'], function() {
 
 gulp.task('bundle-deps', function() {
   var b = browserify({
-    debug: !!gutil.env.debug
-  , detectGlobals: false
+    debug: !!gutil.env.debug,
+    detectGlobals: false
   })
   bundledDeps.forEach(function(dep) { b.require(dep) })
   b.transform('envify')

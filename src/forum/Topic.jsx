@@ -2,7 +2,7 @@
 
 var React = require('react')
 var {Link} = require('react-router')
-var superagent = require('superagent')
+var superagent = require('superagent-ls')
 
 var Post = require('./components/Post')
 
