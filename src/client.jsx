@@ -13,7 +13,7 @@ var routes = require('./routes')
 var appDiv = document.getElementById('app')
 
 Router.run(routes, Router.HistoryLocation, (Handler, state) => {
-  fetchData(state.routes, state.params, function(err, fetchedData) {
+  fetchData(state.routes, state.params, (err, fetchedData) => {
     var props = assign({}, fetchedData, state.payload)
     React.render(<Handler {...props}/>, appDiv)
     document.title = getTitle(state.routes, state.params, props)

@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react')
-var superagent = require('superagent')
+var superagent = require('superagent-ls')
 
 var Section = require('./components/Section')
 
@@ -12,7 +12,7 @@ var Sections = React.createClass({
     title: 'Sections',
 
     fetchData(params, cb) {
-      superagent.get(`${FORUM_API_URL}/sections`).end(function(err, res) {
+      superagent.get(`${FORUM_API_URL}/sections`).end((err, res) => {
         cb(err, res && {sections: res.body})
       })
     }

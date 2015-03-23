@@ -3,7 +3,7 @@
 var {ErrorObject, RenderForm} = require('newforms')
 var React = require('react')
 var {Link, Navigation} = require('react-router')
-var superagent = require('superagent')
+var superagent = require('superagent-ls')
 
 var Validating = require('./Validating')
 var {API_URL} = require('../constants')
@@ -23,9 +23,9 @@ var AddThing = React.createClass({
     willTransitionTo(transition, params, query, payload, cb) {
       if (payload.method != 'POST') { return cb() }
 
-      superagent.post(`${API_URL}/things`).send(payload.body).end(res => {
-        if (res.serverError) {
-          return cb(new Error(`Server error: ${res.body}`))
+      superagent.post(`${API_URL}/things`).send(payload.body).end((err, res) => {
+        if (err || res.serverError) {
+          return cb(err || new Error(`Server error: ${res.body}`))
         }
 
         if (res.clientError) {
@@ -80,7 +80,7 @@ var AddThing = React.createClass({
   render() {
     return <div className="AddThing">
       <h2>Add Thing</h2>
-      <form action="/addthing" method="POST" onSubmit={this._onSubmit} ref="form" autoComplete="off" noValidate={this.state.client}>
+      <form action={this.makeHref('addThing')} method="POST" onSubmit={this._onSubmit} ref="form" autoComplete="off" noValidate={this.state.client}>
         <RenderForm form={ThingForm} ref="thingForm"
           data={this.props.data}
           errors={this._getErrorObject()}

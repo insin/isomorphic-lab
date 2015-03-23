@@ -2,7 +2,7 @@
 
 var React = require('react')
 var {Link} = require('react-router')
-var superagent = require('superagent')
+var superagent = require('superagent-ls')
 
 var Post = require('./components/Post')
 
@@ -15,7 +15,7 @@ var Topic = React.createClass({
     },
 
     fetchData(params, cb) {
-      superagent.get(`${FORUM_API_URL}/topic/${params.id}`).end(function(err, res) {
+      superagent.get(`${FORUM_API_URL}/topic/${params.id}`).end((err, res) => {
         cb(err, res && {topic: res.body})
       })
     }

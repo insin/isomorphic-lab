@@ -9,7 +9,7 @@ module.exports = [
     <Route name="things" handler={require('./components/Things')}/>
     <Route name="thing" path="thing/:num" handler={require('./components/Thing')}/>
     <Route name="addThing" path="add-thing" handler={require('./components/AddThing')}/>
-    <Route name="forums" path="/forums" handler={require('./forum/Forums')}>
+    <Route name="forums" path="forums" handler={require('./forum/Forums')}>
       <DefaultRoute handler={require('./forum/Sections')}/>
       <Route name="section" path="section/:id" handler={require('./forum/Section')}/>
       <Route name="addTopic" path="forum/:id/add-topic" handler={require('./forum/AddTopic')}/>
@@ -18,5 +18,5 @@ module.exports = [
       <Route name="topic" path="topic/:id" handler={require('./forum/Topic')}/>
     </Route>
   </Route>,
-  <NotFoundRoute name="notfound" handler={require('./components/NotFound')}/>
+  <NotFoundRoute name="notFound" handler={require('./components/NotFound')}/>
 ]

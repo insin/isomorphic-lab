@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react')
-var superagent = require('superagent')
+var superagent = require('superagent-ls')
 
 var {API_URL} = require('../constants')
 
@@ -12,8 +12,7 @@ var Thing = React.createClass({
     },
 
     fetchData(params, cb) {
-      superagent.get(`${API_URL}/things/${params.num}`).end(function(err, res) {
-        // TODO How should 404s be handled?
+      superagent.get(`${API_URL}/things/${params.num}`).end((err, res) => {
         cb(err, res && {thing: res.body})
       })
     }

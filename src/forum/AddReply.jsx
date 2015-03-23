@@ -3,7 +3,7 @@
 var {ErrorObject, RenderForm} = require('newforms')
 var React = require('react')
 var {Link, Navigation} = require('react-router')
-var superagent = require('superagent')
+var superagent = require('superagent-ls')
 
 var {FORUM_API_URL} = require('../constants')
 var {ReplyForm} = require('../forms')
@@ -22,7 +22,7 @@ var AddReply = React.createClass({
     },
 
     fetchData(params, cb) {
-      superagent.get(`${FORUM_API_URL}/topic/${params.id}/addReply`).end(function(err, res) {
+      superagent.get(`${FORUM_API_URL}/topic/${params.id}/add-reply`).end((err, res) => {
         cb(err, res && {addReply: res.body})
       })
     },
@@ -30,9 +30,9 @@ var AddReply = React.createClass({
     willTransitionTo(transition, params, query, payload, cb) {
       if (payload.method != 'POST') { return cb() }
 
-      superagent.post(`${FORUM_API_URL}/topic/${params.id}/addReply`).send(payload.body).end(res => {
-        if (res.serverError) {
-          return cb(new Error(`Server error: ${res.body}`))
+      superagent.post(`${FORUM_API_URL}/topic/${params.id}/add-reply`).send(payload.body).end((err, res) => {
+        if (err || res.serverError) {
+          return cb(err || new Error(`Server error: ${res.body}`))
         }
 
         if (res.clientError) {
