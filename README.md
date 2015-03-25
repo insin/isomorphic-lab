@@ -2,6 +2,8 @@
 
 ![logo](https://github.com/insin/isomorphic-lab/raw/master/logo.png)
 
+## Note: this branch depends on changes to React Router implemented in [pull request #828](https://github.com/rackt/react-router/pull/828)
+
 This repo is being used to experiment with writing isomorphic JavaScript apps
 with [React](http://facebook.github.io/react/),
 [React Router](https://github.com/rackt/react-router) and
@@ -111,32 +113,28 @@ with the following locals:
 
 `html` - rendered component output
 
-##### POST requests
+##### Non-GET requests
 
-Post request bodies will be added to the query object received by a route
-handler's static [`willTransitionTo(transition, prarms, query)`](https://github.com/rackt/react-router/blob/master/docs/api/components/RouteHandler.md#willtransitiontotransition-params-query)
-function.
+Non-GET request bodies will be added to the `data` object received by a route
+handler's static `willTransitionTo(transition, prarms, query, callback, data)`
+function as a `body` property.
 
-A `_method` parameter equal to `'POST'` will also be added to distinguish POST
-requests from others, if the same component is being used to handle GET rendering
-too.
+The request method will also be available as a `method` property.
 
 ##### Redirecting
 
-If [`transition.redirect()`](https://github.com/rackt/react-router/blob/master/docs/api/misc/transition.md#redirectto-params-query)
-is used in a `willTransitionTo()`, this will be turned into an HTTP 303 Redirect
-response.
+If `transition.redirect()` is used in a `willTransitionTo()`, this will be
+turned into an HTTP 303 Redirect response...
 
 ##### Re-rendering
 
-If a [`Render`](https://github.com/insin/isomorphic-lab/blob/master/src/utils/Render.js)
-object is passed to `transition.abort()`, the middleware will run a new router
-for the given URL, passing any extra props given to the resulting Handler.
+...unless the Redirect has been given a `data` object. In this case, the
+middleware will create a new Router instance for the redirect URL and the
+redirect's data will be passed as props to the resulting `Handler`.
 
-This can be used to render the correct page back to the user with additional
-data it needs for display without having to serialize data into a query string
-or onto a session and redirecting them, e.g. displaying a form with user input
-and validation errors in response to a POST request with invalid data.
+This can be used to render another route back to the user as a response, e.g.
+rendering a form with user input and validation errors in response to a POST
+request which contained an invalid body.
 
 ##### Errors
 
