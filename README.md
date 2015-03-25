@@ -22,15 +22,15 @@ for discussion of implementation details.
 Before the top-level Handler for the current URL is rendered, the following will
 be done regardless of whether or not the app is running on the client or server:
 
-#### [Data fetching](https://github.com/insin/isomorphic-lab/blob/master/src/utils/fetchData.js)
+#### Data fetching ([source](https://github.com/insin/isomorphic-lab/blob/payload/src/utils/fetchData.js))
 
 Route handlers can define a static `fetchData([params,] callback(err, data))` function,
 which will be called when their route is matched against the current URL. This
 can be used to asynchronously load any data required by the component up-front,
 calling the callback when done.
 
-Data will be passed as a `data` prop to the top-level Handler, with data
-returned from `fetchData()` calls keyed by route name.
+Data will be passed as a `data` prop to the top-level Handler, with return
+values from all `fetchData()` calls merged into one object.
 
 Use JSX spread attributes to to pass this all the way down the chain of route
 handlers:
@@ -39,7 +39,7 @@ handlers:
 <RouteHandler {...this.props}/>
 ```
 
-#### [Title generation](https://github.com/insin/isomorphic-lab/blob/master/src/utils/getTitle.js)
+#### Title generation ([source](https://github.com/insin/isomorphic-lab/blob/payload/src/utils/getTitle.js))
 
 Route handlers can define a static `title` attribute or a synchronous
 `getTitle(props, params)` function, which will be called when the route is
@@ -64,7 +64,7 @@ depending on the environment - this is configurable.
 If `fetchData()` finds a `window.__PROPS__` variable when running on the client,
 it will return the variable's value via its callback then delete the variable.
 
-### [Express middleware](https://github.com/insin/isomorphic-lab/blob/master/src/react-router-middleware.jsx)
+### Express middleware ([source](https://github.com/insin/isomorphic-lab/blob/payload/src/react-router-middleware.jsx))
 
 Usage:
 
