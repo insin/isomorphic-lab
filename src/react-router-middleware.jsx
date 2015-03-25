@@ -45,7 +45,7 @@ module.exports = function(routes, options) {
         return cb(null, router, {notFound: true}, html, null, title)
       }
       fetchData(state.routes, state.params, (err, fetchedData) => {
-        var props = assign({}, fetchedData, state.payload)
+        var props = assign({}, fetchedData, state.data)
         var html = React.renderToString(<Handler {...props}/>)
         var title = getTitle(state.routes, state.params, props, options.title)
         cb(null, router, null, html, JSON.stringify(props), title)
@@ -69,11 +69,11 @@ module.exports = function(routes, options) {
       var redirect = special.redirect
       var path = router.makePath(redirect.to, redirect.params, redirect.query)
       // Rather than introducing a server-specific abort reason object, use the
-      // fact that a redirect has a payload as an indication that a response
-      // should be rendered directly.
-      if (redirect.payload) {
+      // fact that a redirect has a data property as an indication that a
+      // response should be rendered directly.
+      if (redirect.data) {
         renderApp(
-          new StaticLocation(path, redirect.payload),
+          new StaticLocation(path, redirect.data),
           renderAppHandler.bind(null, res, next)
         )
       }
@@ -88,12 +88,12 @@ module.exports = function(routes, options) {
   }
 
   return function reactRouter(req, res, next) {
-    // Provide the method and body of non-GET requests as a payload object
-    var payload = null
+    // Provide the method and body of non-GET requests as a request-like object
+    var data = null
     if (req.method != 'GET') {
-      payload = {method: req.method, body: req.body}
+      data = {method: req.method, body: req.body}
     }
-    var location = new StaticLocation(req.url, payload)
+    var location = new StaticLocation(req.url, data)
     renderApp(location, renderAppHandler.bind(null, res, next))
   }
 }

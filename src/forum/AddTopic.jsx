@@ -27,17 +27,17 @@ var AddTopic = React.createClass({
       })
     },
 
-    willTransitionTo(transition, params, query, payload, cb) {
-      if (payload.method != 'POST') { return cb() }
+    willTransitionTo(transition, params, query, cb, req) {
+      if (req.method != 'POST') { return cb() }
 
-      superagent.post(`${FORUM_API_URL}/forum/${params.id}/add-topic`).send(payload.body).end((err, res) => {
+      superagent.post(`${FORUM_API_URL}/forum/${params.id}/add-topic`).send(req.body).end((err, res) => {
         if (err || res.serverError) {
           return cb(err || new Error(`Server error: ${res.body}`))
         }
 
         if (res.clientError) {
           transition.redirect('addTopic', params, {}, {
-            data_: payload.body,
+            data_: req.body,
             errors: res.body
           })
         }

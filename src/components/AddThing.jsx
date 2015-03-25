@@ -20,17 +20,17 @@ var AddThing = React.createClass({
   statics: {
     title: 'Add Thing',
 
-    willTransitionTo(transition, params, query, payload, cb) {
-      if (payload.method != 'POST') { return cb() }
+    willTransitionTo(transition, params, query, cb, req) {
+      if (req.method != 'POST') { return cb() }
 
-      superagent.post(`${API_URL}/things`).send(payload.body).end((err, res) => {
+      superagent.post(`${API_URL}/things`).send(req.body).end((err, res) => {
         if (err || res.serverError) {
           return cb(err || new Error(`Server error: ${res.body}`))
         }
 
         if (res.clientError) {
           transition.redirect('addThing', {}, {}, {
-            data: payload.body,
+            data: req.body,
             errors: res.body
           })
         }
