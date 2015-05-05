@@ -37,7 +37,7 @@
     "start": "node lib/server"
   },
   "engines": {
-    "node": "0.10.x"
+    "node": "0.12.x"
   },
   "author": "Jonny Buchanan",
   "license": "MIT"
