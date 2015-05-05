@@ -4,7 +4,7 @@ require('setimmediate')
 
 var React = require('react')
 var assign = require('react/lib/Object.assign')
-var Router = require('react-router')
+var Router = require('@insin/react-router')
 
 var fetchData = require('./utils/fetchData')
 var getTitle = require('./utils/getTitle')

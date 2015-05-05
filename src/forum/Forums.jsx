@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react')
-var {RouteHandler} = require('react-router')
+var {RouteHandler} = require('@insin/react-router')
 
 var Forums = React.createClass({
   statics: {

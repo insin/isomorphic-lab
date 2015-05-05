@@ -2,7 +2,7 @@
 
 var {ErrorObject, RenderForm} = require('newforms')
 var React = require('react')
-var {Link, Navigation} = require('react-router')
+var {Link, Navigation} = require('@insin/react-router')
 var superagent = require('superagent-ls')
 
 var {FORUM_API_URL} = require('../constants')

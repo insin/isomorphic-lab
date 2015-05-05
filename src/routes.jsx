@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react')
-var {DefaultRoute, NotFoundRoute, Route} = require('react-router')
+var {DefaultRoute, NotFoundRoute, Route} = require('@insin/react-router')
 
 module.exports = [
   <Route path="/" handler={require('./components/App')}>

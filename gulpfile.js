@@ -15,7 +15,7 @@ var jsLibPaths = './lib/**/*.js'
 var bundledDeps = [
   'events',
   'react',
-  'react-router',
+  '@insin/react-router',
   'superagent-ls',
   'newforms',
   'run-parallel'

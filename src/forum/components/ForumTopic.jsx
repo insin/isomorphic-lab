@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react')
-var {Link} = require('react-router')
+var {Link} = require('@insin/react-router')
 
 var ForumTopic = React.createClass({
   render() {

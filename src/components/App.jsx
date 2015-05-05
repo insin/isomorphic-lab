@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react')
-var {Link, RouteHandler} = require('react-router')
+var {Link, RouteHandler} = require('@insin/react-router')
 
 var {TITLE} = require('../constants')
 
