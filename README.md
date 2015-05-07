@@ -32,7 +32,7 @@ calling the callback when done.
 Data will be passed as a `data` prop to the top-level Handler, with return
 values from all `fetchData()` calls merged into one object.
 
-Use JSX spread attributes to to pass this all the way down the chain of route
+Use JSX spread attributes to pass this all the way down the chain of route
 handlers:
 
 ```javascript
