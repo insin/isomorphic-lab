@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react')
-var {Link} = require('@insin/react-router')
+var {Link} = require('react-router')
 var superagent = require('superagent-ls')
 
 var {API_URL} = require('../constants')
@@ -27,7 +27,7 @@ var Things = React.createClass({
       <h2>Things <small>(10 most recent)</small></h2>
       {things && things.map((thing, index) => <div className="Thing">
         <h3 className="Thing__name">
-          <Link to="thing" params={{num: index + 1}}>{thing.name}</Link>
+          <Link to={`/thing/${index + 1}`}>{thing.name}</Link>
         </h3>
         <div className="Thing__price">
           <strong>&curren;{thing.price.toFixed(2)}</strong>
@@ -37,7 +37,7 @@ var Things = React.createClass({
         </div>
       </div>)}
       <hr/>
-      <Link to="addThing">Add Thing</Link>
+      <Link to="/add-thing">Add Thing</Link>
     </div>
   }
 })

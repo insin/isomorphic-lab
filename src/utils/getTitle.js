@@ -2,16 +2,15 @@
 
 var assign = require('react/lib/Object.assign')
 
-function getTitle(routes, params, props, options) {
+function getTitle(components, params, props, options) {
   options = assign({reverse: true, join: ' · ', defaultTitle: '(untitled)'}, options)
   var titleParts = []
-  routes.forEach(route => {
-    var handler = route.handler
-    if (handler.title) {
-      titleParts.push(handler.title)
+  components.forEach(component => {
+    if (component.title) {
+      titleParts.push(component.title)
     }
-    else if (handler.getTitle) {
-      titleParts.push(handler.getTitle(props, params))
+    else if (component.getTitle) {
+      titleParts.push(component.getTitle(props, params))
     }
   })
 

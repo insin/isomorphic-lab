@@ -1,7 +1,6 @@
 'use strict';
 
 var React = require('react')
-var {RouteHandler} = require('@insin/react-router')
 
 var Forums = React.createClass({
   statics: {
@@ -10,7 +9,7 @@ var Forums = React.createClass({
 
   render() {
     return <div className="Forums">
-      <RouteHandler {...this.props}/>
+      {this.props.children}
     </div>
   }
 })

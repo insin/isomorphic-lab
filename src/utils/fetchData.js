@@ -5,20 +5,20 @@ var runParallel = require('run-parallel')
 
 var env = require('./env')
 
-function fetchData(routes, params, cb) {
+function fetchData(components, params, cb) {
   if (env.CLIENT && typeof window.__PROPS__ != 'undefined') {
     var props = window.__PROPS__
     delete window.__PROPS__
     return cb(null, props)
   }
 
-  var fetchDataRoutes = routes.filter(route => route.handler.fetchData)
-  if (fetchDataRoutes.length === 0) {
+  var fetchDataComponents = components.filter(component => component.fetchData)
+  if (fetchDataComponents.length === 0) {
     return cb(null, {})
   }
 
-  var dataFetchers = fetchDataRoutes.map(route => {
-    var fetcher = route.handler.fetchData
+  var dataFetchers = fetchDataComponents.map(component => {
+    var fetcher = component.fetchData
     if (fetcher.length == 2) {
       fetcher = fetcher.bind(null, params)
     }

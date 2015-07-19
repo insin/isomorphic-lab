@@ -2,7 +2,7 @@
 
 var {ErrorObject, RenderForm} = require('newforms')
 var React = require('react')
-var {Link, Navigation} = require('@insin/react-router')
+var {Link, Navigation} = require('react-router')
 var superagent = require('superagent-ls')
 
 var Validating = require('./Validating')
@@ -20,8 +20,9 @@ var AddThing = React.createClass({
   statics: {
     title: 'Add Thing',
 
-    willTransitionTo(transition, params, query, cb, req) {
-      if (req.method != 'POST') { return cb() }
+    onEnter(state, transition, cb) {
+      var req = state.location.state
+      if (!req || req.method !== 'POST') { return cb() }
 
       superagent.post(`${API_URL}/things`).send(req.body).end((err, res) => {
         if (err || res.serverError) {
@@ -29,13 +30,13 @@ var AddThing = React.createClass({
         }
 
         if (res.clientError) {
-          transition.redirect('addThing', {}, {}, {
+          transition.to('/add-thing', null, {
             data: req.body,
             errors: res.body
           })
         }
         else {
-          transition.redirect('things')
+          transition.to('/things')
         }
         cb()
       })
@@ -69,7 +70,7 @@ var AddThing = React.createClass({
     var form = this.refs.thingForm.getForm()
     form.validate(this.refs.form, (err, isValid) => {
       if (isValid) {
-        this.transitionTo('addThing', {}, {}, {
+        this.transitionTo('/add-thing', null, {
           method: 'POST',
           body: form.data
         })
@@ -80,13 +81,13 @@ var AddThing = React.createClass({
   render() {
     return <div className="AddThing">
       <h2>Add Thing</h2>
-      <form action={this.makeHref('addThing')} method="POST" onSubmit={this._onSubmit} ref="form" autoComplete="off" noValidate={this.state.client}>
+      <form action="/add-thing" method="POST" onSubmit={this._onSubmit} ref="form" autoComplete="off" noValidate={this.state.client}>
         <RenderForm form={ThingForm} ref="thingForm"
           data={this.props.data}
           errors={this._getErrorObject()}
           progress={Validating}
         />
-        <button>Submit</button> or <Link to="things">Cancel</Link>
+        <button>Submit</button> or <Link to="/things">Cancel</Link>
       </form>
     </div>
   }

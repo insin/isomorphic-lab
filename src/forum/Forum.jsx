@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react')
-var {Link} = require('@insin/react-router')
+var {Link} = require('react-router')
 var superagent = require('superagent-ls')
 
 var ForumTopic = require('./components/ForumTopic')
@@ -26,11 +26,11 @@ var Forum = React.createClass({
     var {id, name, description, subforums, topics, section} = this.props.data.forum
     return <div className="Forum">
       <div className="Breadcrumbs">
-        <Link to="forums">Forums</Link>
+        <Link to="/forums">Forums</Link>
         {' → '}
-        <Link to="section" params={{id: section.id}}>{section.name}</Link>
+        <Link to={`/forums/section/${section.id}`}>{section.name}</Link>
         {' → '}
-        <Link to="forum" params={{id}}>{name}</Link>
+        <Link to={`/forums/forum/${id}`}>{name}</Link>
       </div>
       <h2 className="Forum__name">{name}</h2>
       {description && <p className="Forum__description">
@@ -43,7 +43,7 @@ var Forum = React.createClass({
         </tbody>
       </table>}
       <div className="Forum__controls">
-        <Link to="addTopic" params={{id}}>New Topic</Link>
+        <Link to={`/forums/forum/${id}/add-topic`}>New Topic</Link>
       </div>
       <table className="Forum__topics">
         <tbody>

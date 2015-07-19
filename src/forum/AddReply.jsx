@@ -2,7 +2,7 @@
 
 var {ErrorObject, RenderForm} = require('newforms')
 var React = require('react')
-var {Link, Navigation} = require('@insin/react-router')
+var {Link, Navigation} = require('react-router')
 var superagent = require('superagent-ls')
 
 var {FORUM_API_URL} = require('../constants')
@@ -27,22 +27,24 @@ var AddReply = React.createClass({
       })
     },
 
-    willTransitionTo(transition, params, query, cb, req) {
-      if (req.method != 'POST') { return cb() }
+    onEnter(state, transition, cb) {
+      var req = state.location.state
+      if (!req || req.method !== 'POST') { return cb() }
 
+      var {params} = state
       superagent.post(`${FORUM_API_URL}/topic/${params.id}/add-reply`).send(req.body).end((err, res) => {
         if (err || res.serverError) {
           return cb(err || new Error(`Server error: ${res.body}`))
         }
 
         if (res.clientError) {
-          transition.redirect('addReply', params, {}, {
+          transition.to(`/forums/topic/${params.id}/add-reply`, null, {
             data_: req.body,
             errors: res.body
           })
         }
         else {
-          transition.redirect('topic', params)
+          transition.to(`/forums/topic/${params.id}`)
         }
         cb()
       })
@@ -75,7 +77,8 @@ var AddReply = React.createClass({
     e.preventDefault()
     var form = this.refs.replyForm.getForm()
     if (form.validate(this.refs.form)) {
-      this.transitionTo('addReply', {id: this.props.data.addReply.id}, {}, {
+      var {id} = this.props.data.addReply
+      this.transitionTo(`/forums/topic/${id}/add-reply`, null, {
         method: 'POST',
         body: form.data
       })
@@ -86,21 +89,21 @@ var AddReply = React.createClass({
     var {id, title, section, forum} = this.props.data.addReply
     return <div className="AddReply">
       <div className="Breadcrumbs">
-        <Link to="forums">Forums</Link>
+        <Link to="/forums">Forums</Link>
         {' → '}
-        <Link to="section" params={{id: section.id}}>{section.name}</Link>
+        <Link to={`/forums/section/${section.id}`}>{section.name}</Link>
         {' → '}
-        <Link to="forum" params={{id: forum.id}}>{forum.name}</Link>
+        <Link to={`/forums/forum/${forum.id}`}>{forum.name}</Link>
         {' → '}
-        <Link to="topic" params={{id}}>{title}</Link>
+        <Link to={`/forums/topic/${id}`}>{title}</Link>
       </div>
       <h2>Replying to {title}</h2>
-      <form action={this.makeHref('addReply', {id})} method="POST" onSubmit={this._onSubmit} ref="form" autoComplete="off" noValidate={this.state.client}>
+      <form action={`/forums/topic/${id}/add-reply`} method="POST" onSubmit={this._onSubmit} ref="form" autoComplete="off" noValidate={this.state.client}>
         <RenderForm form={ReplyForm} ref="replyForm"
           data={this.props.data_}
           errors={this._getErrorObject()}
         />
-        <button>Submit</button> or <Link to="topic" params={{id}}>Cancel</Link>
+        <button>Submit</button> or <Link to={`/forums/topic/${id}`}>Cancel</Link>
       </form>
     </div>
   }

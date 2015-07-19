@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react')
-var {Link, RouteHandler} = require('@insin/react-router')
+var {Link} = require('react-router')
 
 var {TITLE} = require('../constants')
 
@@ -22,14 +22,14 @@ var App = React.createClass({
 
   render() {
     return <div className="App">
-      <h1><Link to="home"><img src="/img/logo.png"/> Isomorphic Lab</Link> <small>({this.state.server ? 'server' : 'client'} version)</small></h1>
+      <h1><Link to="/"><img src="/img/logo.png"/> Isomorphic Lab</Link> <small>({this.state.server ? 'server' : 'client'} version)</small></h1>
       <hr/>
       <nav>
-        <Link to="things">Things</Link>{' | '}
-        <Link to="forums">Forums</Link>
+        <Link to="/things">Things</Link>{' | '}
+        <Link to="/forums">Forums</Link>
       </nav>
       <hr/>
-      <RouteHandler {...this.props}/>
+      {this.props.children}
       <hr/>
       <footer>
         <a href="https://github.com/insin/isomorphic-lab">Fork me on GitHub</a>
