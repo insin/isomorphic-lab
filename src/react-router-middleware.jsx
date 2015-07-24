@@ -4,9 +4,11 @@ var React = require('react')
 var assign = require('react/lib/Object.assign')
 var {Router} = require('react-router')
 var Location = require('react-router/lib/Location')
+// XXX
+var AsyncProps = require('react-router/lib/experimental/AsyncProps').default
 
-var fetchData = require('./utils/fetchData')
 var getTitle = require('./utils/getTitle')
+var getPropsForComponent = require('./utils/getPropsForComponent')
 
 module.exports = function(routes, options) {
   if (!routes) {
@@ -15,25 +17,25 @@ module.exports = function(routes, options) {
   options = assign({title: {}}, options)
 
   function renderApp(location, cb) {
-    Router.run(routes, location, (err, state, transition) => {
+    Router.run(routes, location, (err, routerState, transition) => {
       if (err) { return cb(err) }
 
       if (transition.isCancelled) {
         return cb(null, transition)
       }
 
-      fetchData(state.components, state.params, (err, fetchedData) => {
+      AsyncProps.hydrate(routerState, (err, {propsArray, componentsArray}) => {
         if (err) { return cb(err) }
-        var extraProps = assign({}, fetchedData, state.location.state)
         function createElement(Component, props) {
-          return <Component {...extraProps} {...props}/>
+          var asyncProps = getPropsForComponent(Component, componentsArray, propsArray)
+          return <Component {...asyncProps} {...props}/>
         }
         var html = React.renderToString(
-          <Router {...state} createElement={createElement}/>
+          <Router {...routerState} createElement={createElement}/>
         )
         try {
-          var title = getTitle(state.components, state.params, extraProps, options.title)
-          cb(null, transition, html, JSON.stringify(extraProps), title)
+          var title = getTitle(routerState, componentsArray, propsArray, options.title)
+          cb(null, transition, html, JSON.stringify(propsArray), title)
         }
         catch(err) {
           cb(err)

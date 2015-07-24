@@ -18,20 +18,20 @@ var AddTopic = React.createClass({
 
   statics: {
     getTitle(props) {
-      return `Posting a New Topic in ${props.data.addTopic.name}`
+      return `Posting a New Topic in ${props.addTopic.name}`
     },
 
-    fetchData(params, cb) {
+    loadProps(params, cb) {
       superagent.get(`${FORUM_API_URL}/forum/${params.id}/add-topic`).end((err, res) => {
         cb(err, res && {addTopic: res.body})
       })
     },
 
-    onEnter(state, transition, cb) {
-      var req = state.location.state
+    onEnter(routerState, transition, cb) {
+      var req = routerState.location.state
       if (!req || req.method !== 'POST') { return cb() }
 
-      var {params} = state
+      var {params} = routerState
       superagent.post(`${FORUM_API_URL}/forum/${params.id}/add-topic`).send(req.body).end((err, res) => {
         if (err || res.serverError) {
           return cb(err || new Error(`Server error: ${res.body}`))
@@ -39,7 +39,7 @@ var AddTopic = React.createClass({
 
         if (res.clientError) {
           transition.to(`/forums/forum/${params.id}/add-topic`, null, {
-            data_: req.body,
+            data: req.body,
             errors: res.body
           })
         }
@@ -62,22 +62,22 @@ var AddTopic = React.createClass({
   },
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.errors) {
-      var errorObject = this._getErrorObject(nextProps.errors)
+    if (nextProps.location.state && nextProps.location.state.errors) {
+      var errorObject = this._getErrorObject(nextProps)
       this.refs.topicForm.getForm().setErrors(errorObject)
     }
   },
 
-  _getErrorObject(errors) {
-    if (!errors) { errors = this.props.errors }
-    return errors ? ErrorObject.fromJSON(errors) : null
+  _getErrorObject(props) {
+    var state = (props ? props.location : this.props.location).state
+    return state && state.errors ? ErrorObject.fromJSON(state.errors) : null
   },
 
   _onSubmit(e) {
     e.preventDefault()
     var form = this.refs.topicForm.getForm()
     if (form.validate(this.refs.form)) {
-      var {id} = this.props.data.addTopic
+      var {id} = this.props.addTopic
       this.transitionTo(`/forums/forum/${id}/add-topic`, null, {
         method: 'POST',
         body: form.data
@@ -86,7 +86,9 @@ var AddTopic = React.createClass({
   },
 
   render() {
-    var {id, name, section} = this.props.data.addTopic
+    var {addTopic, location} = this.props
+    var {id, name, section} = addTopic
+    var data = location.state && location.state.data
     return <div className="AddTopic">
       <div className="Breadcrumbs">
         <Link to="/forums">Forums</Link>
@@ -98,7 +100,7 @@ var AddTopic = React.createClass({
       <h2>Posting a New Topic in {name}</h2>
       <form action={`/forums/forum/${id}/add-topic`} method="POST" onSubmit={this._onSubmit} ref="form" autoComplete="off" noValidate={this.state.client}>
         <RenderForm form={TopicForm} ref="topicForm"
-          data={this.props.data_}
+          data={data}
           errors={this._getErrorObject()}
         />
         <button>Submit</button> or <Link to={`/forums/forum/${id}`}>Cancel</Link>

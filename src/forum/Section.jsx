@@ -11,10 +11,10 @@ var {FORUM_API_URL} = require('../constants')
 var Section = React.createClass({
   statics: {
     getTitle(props, params) {
-      return props.data.section.name
+      return props.section.name
     },
 
-    fetchData(params, cb) {
+    loadProps(params, cb) {
       superagent.get(`${FORUM_API_URL}/section/${params.id}`).end((err, res) => {
         cb(err, res && {section: res.body})
       })
@@ -22,7 +22,7 @@ var Section = React.createClass({
   },
 
   render() {
-    var {id, name, forums} = this.props.data.section
+    var {id, name, forums} = this.props.section
     return <div className="Section">
       <div className="Breadcrumbs">
         <Link to="/forums">Forums</Link>

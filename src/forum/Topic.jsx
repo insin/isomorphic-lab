@@ -11,10 +11,10 @@ var {FORUM_API_URL} = require('../constants')
 var Topic = React.createClass({
   statics: {
     getTitle(props, params) {
-      return `${props.data.topic.title} · ${props.data.topic.forum.name}`
+      return `${props.topic.title} · ${props.topic.forum.name}`
     },
 
-    fetchData(params, cb) {
+    loadProps(params, cb) {
       superagent.get(`${FORUM_API_URL}/topic/${params.id}`).end((err, res) => {
         cb(err, res && {topic: res.body})
       })
@@ -22,7 +22,7 @@ var Topic = React.createClass({
   },
 
   render() {
-    var {id, title, posts, forum, section} = this.props.data.topic
+    var {id, title, posts, forum, section} = this.props.topic
     return <div className="Topic">
       <div className="Breadcrumbs">
         <Link to="/forums">Forums</Link>

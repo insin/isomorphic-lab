@@ -10,7 +10,7 @@ var Things = React.createClass({
   statics: {
     title: 'Things',
 
-    fetchData(cb) {
+    loadProps(params, cb) {
       superagent.get(`${API_URL}/things`).accept('json').end((err, res) => {
         cb(err, res && {things: res.body})
       })
@@ -18,11 +18,11 @@ var Things = React.createClass({
   },
 
   getDefaultProps() {
-    return {data: {}}
+    return {things: []}
   },
 
   render() {
-    var {things} = this.props.data
+    var {things} = this.props
     return <div className="Things">
       <h2>Things <small>(10 most recent)</small></h2>
       {things && things.map((thing, index) => <div className="Thing">

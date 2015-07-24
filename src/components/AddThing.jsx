@@ -20,8 +20,8 @@ var AddThing = React.createClass({
   statics: {
     title: 'Add Thing',
 
-    onEnter(state, transition, cb) {
-      var req = state.location.state
+    onEnter(routerState, transition, cb) {
+      var req = routerState.location.state
       if (!req || req.method !== 'POST') { return cb() }
 
       superagent.post(`${API_URL}/things`).send(req.body).end((err, res) => {
@@ -54,15 +54,15 @@ var AddThing = React.createClass({
   },
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.errors) {
-      var errorObject = this._getErrorObject(nextProps.errors)
+    if (nextProps.location.state && nextProps.location.state.errors) {
+      var errorObject = this._getErrorObject(nextProps)
       this.refs.thingForm.getForm().setErrors(errorObject)
     }
   },
 
-  _getErrorObject(errors) {
-    if (!errors) { errors = this.props.errors }
-    return errors ? ErrorObject.fromJSON(errors) : null
+  _getErrorObject(props) {
+    var state = (props ? props.location : this.props.location).state
+    return state && state.errors ? ErrorObject.fromJSON(state.errors) : null
   },
 
   _onSubmit(e) {
@@ -79,11 +79,13 @@ var AddThing = React.createClass({
   },
 
   render() {
+    var {location} = this.props
+    var data = location.state && location.state.data
     return <div className="AddThing">
       <h2>Add Thing</h2>
       <form action="/add-thing" method="POST" onSubmit={this._onSubmit} ref="form" autoComplete="off" noValidate={this.state.client}>
         <RenderForm form={ThingForm} ref="thingForm"
-          data={this.props.data}
+          data={data}
           errors={this._getErrorObject()}
           progress={Validating}
         />

@@ -2,7 +2,10 @@
 
 var assign = require('react/lib/Object.assign')
 
-function getTitle(components, params, props, options) {
+var getPropsForComponent = require('./getPropsForComponent')
+
+function getTitle(routerState, componentsArray, propsArray, options) {
+  var {components, params} = routerState
   options = assign({reverse: true, join: ' · ', defaultTitle: '(untitled)'}, options)
   var titleParts = []
   components.forEach(component => {
@@ -10,6 +13,9 @@ function getTitle(components, params, props, options) {
       titleParts.push(component.title)
     }
     else if (component.getTitle) {
+      var props = component.loadProps
+                  ? getPropsForComponent(component, componentsArray, propsArray)
+                  : {}
       titleParts.push(component.getTitle(props, params))
     }
   })

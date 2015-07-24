@@ -11,7 +11,7 @@ var Sections = React.createClass({
   statics: {
     title: 'Sections',
 
-    fetchData(params, cb) {
+    loadProps(params, cb) {
       superagent.get(`${FORUM_API_URL}/sections`).end((err, res) => {
         cb(err, res && {sections: res.body})
       })
@@ -19,7 +19,7 @@ var Sections = React.createClass({
   },
 
   render() {
-    var {sections} = this.props.data
+    var {sections} = this.props
     return <div className="Sections">
       {sections.map(section => <Section {...section}/>)}
     </div>

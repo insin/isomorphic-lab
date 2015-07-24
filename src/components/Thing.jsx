@@ -8,10 +8,10 @@ var {API_URL} = require('../constants')
 var Thing = React.createClass({
   statics: {
     getTitle(props, params) {
-      return `Thing: ${props.data.thing.name}`
+      return `Thing: ${props.thing.name}`
     },
 
-    fetchData(params, cb) {
+    loadProps(params, cb) {
       superagent.get(`${API_URL}/things/${params.num}`).end((err, res) => {
         cb(err, res && {thing: res.body})
       })
@@ -19,11 +19,11 @@ var Thing = React.createClass({
   },
 
   getDefaultProps() {
-    return {data: {}}
+    return {thing: {}}
   },
 
   render() {
-    var {thing} = this.props.data
+    var {thing} = this.props
     if (thing.error) {
       return <h3>Error: {thing.error}</h3>
     }
