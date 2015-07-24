@@ -6,13 +6,32 @@ This repo is being used to experiment with writing isomorphic JavaScript apps wi
 
 It uses [newforms](https://github.com/insin/newforms) for form display and validation on both ends - this could be done manually with any component which can populate its form fields and display error messages based on its props and state, though.
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Functionality](#functionality)
+  - [Data fetching](#data-fetching)
+  - [Title generation ([source](https://github.com/insin/isomorphic-lab/blob/master/src/utils/getTitle.js))](#title-generation-sourcehttpsgithubcominsinisomorphic-labblobmastersrcutilsgettitlejs)
+- [Client rehydration](#client-rehydration)
+- [Express middleware ([source](https://github.com/insin/isomorphic-lab/blob/payload/src/react-router-middleware.jsx))](#express-middleware-sourcehttpsgithubcominsinisomorphic-labblobpayloadsrcreact-router-middlewarejsx)
+  - [`options.title`](#optionstitle)
+  - [Response handling](#response-handling)
+    - [Successful rendering](#successful-rendering)
+    - [Non-GET requests](#non-get-requests)
+    - [Redirecting](#redirecting)
+    - [Re-rendering](#re-rendering)
+    - [Errors](#errors)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ### Functionality
 
 #### Data fetching
 
 React Router's experimental `AsyncProps` is used to fetch data, with route components defining a static `loadProps(params, callback(err, data))` function, which will be called when their route is matched against the current URL.
 
-#### Title generation ([source](https://github.com/insin/isomorphic-lab/blob/1.0/src/utils/getTitle.js))
+#### Title generation ([source](https://github.com/insin/isomorphic-lab/blob/master/src/utils/getTitle.js))
 
 Route components can define a static `title` attribute or a synchronous `getTitle(props, params)` function, which will be called when the route is matched against the current URL.
 
@@ -80,4 +99,4 @@ This can be used to render another route back to the user as a response, e.g. re
 
 If an error is detected at any time, the middleware will call its `next()` callback with the error to allow whatever error handling middleware is configured elsewhere to pick it up.
 
-### MIT Licensed
+**MIT Licensed**
