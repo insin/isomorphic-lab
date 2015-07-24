@@ -48,9 +48,14 @@ module.exports = function(routes, options) {
           var asyncProps = getPropsForComponent(Component, componentsArray, propsArray)
           return <Component {...asyncProps} {...props}/>
         }
-        var html = React.renderToString(<Router {...routerState} createElement={createElement}/>)
-        var title = getTitle(routerState, componentsArray, propsArray, options.title)
-        res.render('react', {html, title, props: JSON.stringify(propsArray)})
+        try {
+          var html = React.renderToString(<Router {...routerState} createElement={createElement}/>)
+          var title = getTitle(routerState, componentsArray, propsArray, options.title)
+          res.render('react', {html, title, props: JSON.stringify(propsArray)})
+        }
+        catch(err) {
+          next(err)
+        }
       })
     })
   }
