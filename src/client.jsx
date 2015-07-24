@@ -1,21 +1,25 @@
 'use strict';
 
-require('setimmediate')
-
 var React = require('react')
-var assign = require('react/lib/Object.assign')
-var Router = require('react-router')
+var {Router, Route} = require('react-router')
+var {history} = require('react-router/lib/BrowserHistory')
+// XXX
+var AsyncProps = require('react-router/lib/experimental/AsyncProps').default
 
-var fetchData = require('./utils/fetchData')
 var getTitle = require('./utils/getTitle')
 var routes = require('./routes')
 
-var appDiv = document.getElementById('app')
+function onUpdate() {
+  console.log('onUpdate', this.state)
+}
 
-Router.run(routes, Router.HistoryLocation, (Handler, state) => {
-  fetchData(state.routes, state.params, (err, fetchedData) => {
-    var props = assign({}, fetchedData, state.data)
-    React.render(<Handler {...props}/>, appDiv)
-    document.title = getTitle(state.routes, state.params, props)
-  })
-})
+AsyncProps.rehydrate(window.__PROPS__)
+
+React.render(
+  <Router history={history} createElement={AsyncProps.createElement} onUpdate={onUpdate}>
+    <Route component={AsyncProps}>
+      {routes}
+    </Route>
+  </Router>,
+  document.getElementById('app')
+)

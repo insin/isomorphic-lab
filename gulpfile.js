@@ -13,12 +13,12 @@ var jsSrcPaths = './src/**/*.js*'
 var jsLibPaths = './lib/**/*.js'
 
 var bundledDeps = [
-  'events',
   'react',
   'react-router',
-  'superagent-ls',
+  'react-router/lib/BrowserHistory',
+  'react-router/lib/experimental/AsyncProps',
   'newforms',
-  'run-parallel'
+  'superagent-ls'
 ]
 
 process.env.NODE_ENV = gutil.env.production ? 'production' : 'development'
@@ -58,8 +58,8 @@ gulp.task('bundle-js', ['lint-js'], function() {
 
 gulp.task('bundle-deps', function() {
   var b = browserify({
-    debug: !!gutil.env.debug,
-    detectGlobals: false
+    debug: !!gutil.env.debug//,
+    //detectGlobals: false
   })
   bundledDeps.forEach(function(dep) { b.require(dep) })
   b.transform('envify')
@@ -78,10 +78,11 @@ gulp.task('bundle', ['bundle-deps', 'bundle-js'])
 
 gulp.task('server', function(cb) {
   nodemon({
-    script: './lib/server.js'
-  , ignore: ['./src/*', './static/*']
-  , ext: 'jade js'
-  , delay: 5
+    script: './lib/server.js',
+    ignore: ['./src/*', './static/*'],
+    ext: 'jade js',
+    delay: 5//,
+    //nodeArgs: ['--debug']
   })
   cb()
 })
