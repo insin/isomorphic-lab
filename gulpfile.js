@@ -14,6 +14,7 @@ var jsLibPaths = './lib/**/*.js'
 
 var bundledDeps = [
   'react',
+  'react-dom',
   'react-router',
   'react-router/lib/BrowserHistory',
   'react-router/lib/experimental/AsyncProps',

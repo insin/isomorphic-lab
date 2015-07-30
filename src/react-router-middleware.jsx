@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react')
+var ReactDOMServer = require('react-dom/server')
 var assign = require('react/lib/Object.assign')
 var {Router} = require('react-router')
 var Location = require('react-router/lib/Location')
@@ -49,7 +50,7 @@ module.exports = function(routes, options) {
           return <Component {...asyncProps} {...props}/>
         }
         try {
-          var html = React.renderToString(<Router {...routerState} createElement={createElement}/>)
+          var html = ReactDOMServer.renderToString(<Router {...routerState} createElement={createElement}/>)
           var title = getTitle(routerState, componentsArray, propsArray, options.title)
           res.render('react', {html, title, props: JSON.stringify(propsArray)})
         }

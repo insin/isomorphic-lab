@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react')
+var ReactDOM = require('react-dom')
 var {Router, Route} = require('react-router')
 var {history} = require('react-router/lib/BrowserHistory')
 // XXX
@@ -15,7 +16,7 @@ function onUpdate() {
 
 AsyncProps.rehydrate(window.__PROPS__)
 
-React.render(
+ReactDOM.render(
   <Router history={history} createElement={AsyncProps.createElement} onUpdate={onUpdate}>
     <Route component={AsyncProps}>
       {routes}
